@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <rect width="120" height="120" fill="#12100f"/>
+  <path d="M60,24 L69,50 L96,50 L74,66 L82,94 L60,77 L38,94 L46,66 L24,50 L51,50 Z" fill="#c6ff3d" stroke="#f5eddd" stroke-width="4" stroke-linejoin="round">
+    <animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="12s" repeatCount="indefinite"/>
+  </path>
+  <path d="M46,10 L38,30 L48,42 L36,58 L46,74 L38,92 L46,110 C14,108 4,72 16,40 C23,20 34,10 46,10 Z" fill="#f5eddd" stroke="#12100f" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M74,10 L82,30 L72,42 L84,58 L74,74 L82,92 L74,110 C106,108 116,72 104,40 C97,20 86,10 74,10 Z" fill="#f5eddd" stroke="#12100f" stroke-width="6" stroke-linejoin="round"/>
+</svg>

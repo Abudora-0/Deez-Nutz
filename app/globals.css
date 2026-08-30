@@ -1,0 +1,258 @@
+@import "tailwindcss";
+
+/*
+  Deez Nutz - neo brutalist arcade theme
+  All controls (scrollbar, selection, focus, dropdowns, counters) are tuned
+  to this look. No rounded softness, hard offset shadows, loud color.
+*/
+
+:root {
+  --bg: #12100f;
+  --bg-2: #1b1714;
+  --surface: #211c19;
+  --paper: #f5eddd;
+  --fg: #f5eddd;
+  --fg-dim: #b9ae98;
+  --line: #f5eddd;
+
+  --acid: #c6ff3d;
+  --hot: #ff2e88;
+  --volt: #4d7cff;
+  --sun: #ffb703;
+  --grape: #9b5de5;
+
+  --shadow: 6px 6px 0 0 var(--line);
+  --shadow-sm: 3px 3px 0 0 var(--line);
+  --shadow-acid: 6px 6px 0 0 var(--acid);
+  --shadow-hot: 6px 6px 0 0 var(--hot);
+
+  --border-w: 3px;
+  --ease-spring: cubic-bezier(0.16, 1.11, 0.3, 1.02);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-surface: var(--surface);
+  --color-paper: var(--paper);
+  --color-fg: var(--fg);
+  --color-fg-dim: var(--fg-dim);
+  --color-line: var(--line);
+  --color-acid: var(--acid);
+  --color-hot: var(--hot);
+  --color-volt: var(--volt);
+  --color-sun: var(--sun);
+  --color-grape: var(--grape);
+
+  --font-display: var(--font-archivo-black);
+  --font-sans: var(--font-space-grotesk);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-color: var(--acid) var(--bg-2);
+  scrollbar-width: auto;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* keep a real cursor on touch and coarse pointers */
+@media (hover: none), (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+}
+
+::selection {
+  background: var(--hot);
+  color: #12100f;
+}
+
+/* themed scrollbar for webkit and chromium */
+::-webkit-scrollbar {
+  width: 15px;
+  height: 15px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-2);
+  border-left: var(--border-w) solid var(--line);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--acid);
+  border: var(--border-w) solid var(--line);
+  box-shadow: inset 2px 2px 0 rgba(18, 16, 15, 0.35);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--hot);
+}
+::-webkit-scrollbar-thumb:active {
+  background: var(--sun);
+}
+::-webkit-scrollbar-corner {
+  background: var(--bg-2);
+}
+
+/* focus is loud and square */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: var(--border-w) solid var(--volt);
+  outline-offset: 2px;
+}
+
+/* utility layer */
+@layer utilities {
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 460px;
+  }
+  .brutal-border {
+    border: var(--border-w) solid var(--line);
+  }
+  .brutal-shadow {
+    box-shadow: var(--shadow);
+  }
+  .brutal-shadow-sm {
+    box-shadow: var(--shadow-sm);
+  }
+  .text-stroke {
+    -webkit-text-stroke: 2px var(--line);
+    paint-order: stroke fill;
+  }
+  .halftone {
+    background-image: radial-gradient(var(--line) 1.1px, transparent 1.3px);
+    background-size: 9px 9px;
+  }
+  .grid-paper {
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 46px 46px;
+    opacity: 0.06;
+  }
+}
+
+/* marquee ticker */
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ticker-track {
+  animation: ticker-scroll 30s linear infinite;
+}
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* CRT scanlines + flicker */
+@keyframes crt-flicker {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+.scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(10, 10, 12, 0.14) 3px,
+    rgba(0, 0, 0, 0) 4px
+  );
+  animation: crt-flicker 4.5s steps(2, end) infinite;
+}
+
+/* dropdown / popover pop */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.anim-pop {
+  animation: pop-in 0.16s var(--ease-spring);
+}
+
+/* blink for terminal-style bits */
+@keyframes hard-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.blink {
+  animation: hard-blink 1s steps(1) infinite;
+}
+
+/* jitter used by chaos mode */
+@keyframes chaos-jitter {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(-2px, 1px) rotate(-0.6deg);
+  }
+  50% {
+    transform: translate(2px, -1px) rotate(0.5deg);
+  }
+  75% {
+    transform: translate(-1px, -2px) rotate(0.3deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+.chaos-on .chaos-item {
+  animation: chaos-jitter 0.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .scanlines::after {
+    animation: none;
+    opacity: 0.08;
+  }
+  body {
+    cursor: auto;
+  }
+}
