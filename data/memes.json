@@ -1,0 +1,445 @@
+[
+  {
+    "id": "gottem",
+    "slug": "ligma-deez-nutz",
+    "title": "Ligma? Deez Nutz",
+    "type": "gif",
+    "tags": ["classic", "savage", "animated"],
+    "blurb": "The original bait and switch. Ask about ligma, receive enlightenment.",
+    "spec": {
+      "template": "starburst",
+      "palette": "hot",
+      "mascot": "none",
+      "lines": ["WHAT IS", "LIGMA?", "DEEZ NUTZ"],
+      "note": "gottem"
+    }
+  },
+  {
+    "id": "certified",
+    "slug": "certified-deez-nutz-moment",
+    "title": "Certified Deez Nutz Moment",
+    "type": "image",
+    "tags": ["classic", "stamp", "savage"],
+    "blurb": "For occasions of undeniable, notarized victory.",
+    "spec": {
+      "template": "stamp",
+      "palette": "acid",
+      "mascot": "smug",
+      "lines": ["CERTIFIED", "DEEZ NUTZ", "MOMENT"],
+      "note": "notarized by nutty"
+    }
+  },
+  {
+    "id": "task-failed",
+    "slug": "task-failed-successfully",
+    "title": "Task Failed Successfully",
+    "type": "image",
+    "tags": ["office", "reaction", "absurd"],
+    "blurb": "Windows told you it was fine. It was not fine.",
+    "spec": {
+      "template": "classic",
+      "palette": "volt",
+      "mascot": "grin",
+      "lines": ["TASK FAILED", "SUCCESSFULLY"],
+      "note": "error code: 0xNUT"
+    }
+  },
+  {
+    "id": "free-real-estate",
+    "slug": "its-free-real-estate",
+    "title": "It's Free Real Estate",
+    "type": "image",
+    "tags": ["classic", "absurd", "reaction"],
+    "blurb": "Whispered over a campfire while taking something that is not yours.",
+    "spec": {
+      "template": "billboard",
+      "palette": "sun",
+      "mascot": "none",
+      "lines": ["IT'S FREE", "REAL ESTATE"],
+      "note": "no down payment"
+    }
+  },
+  {
+    "id": "this-is-fine",
+    "slug": "this-is-fine-nut",
+    "title": "This Is Fine",
+    "type": "gif",
+    "tags": ["reaction", "cursed", "animated", "office"],
+    "blurb": "The building is on fire and the standup is still happening.",
+    "spec": {
+      "template": "classic",
+      "palette": "sun",
+      "mascot": "flames",
+      "lines": ["THIS IS FINE"],
+      "note": "everything is under control"
+    }
+  },
+  {
+    "id": "bold-move",
+    "slug": "bold-move-cotton",
+    "title": "Bold Move, Cotton",
+    "type": "image",
+    "tags": ["reaction", "office", "savage"],
+    "blurb": "Let's see if it pays off for them.",
+    "spec": {
+      "template": "classic",
+      "palette": "grape",
+      "mascot": "shades",
+      "lines": ["BOLD MOVE COTTON", "LET'S SEE IF IT PAYS OFF"],
+      "note": "narrator: it did not"
+    }
+  },
+  {
+    "id": "not-bad",
+    "slug": "not-bad-nut",
+    "title": "Not Bad",
+    "type": "image",
+    "tags": ["reaction", "wholesome"],
+    "blurb": "Mild approval from a creature that rarely gives it.",
+    "spec": {
+      "template": "classic",
+      "palette": "acid",
+      "mascot": "thumbsup",
+      "lines": ["NOT BAD"],
+      "note": "high praise, actually"
+    }
+  },
+  {
+    "id": "drake-nut",
+    "slug": "prod-on-friday",
+    "title": "Deploy On Friday",
+    "type": "image",
+    "tags": ["office", "gaming", "brain"],
+    "blurb": "A Drake style ruling on release engineering.",
+    "spec": {
+      "template": "drake",
+      "palette": "hot",
+      "mascot": "none",
+      "lines": ["Push to prod on Friday afternoon", "Push to prod, then log off and mute Slack"]
+    }
+  },
+  {
+    "id": "expanding-brain",
+    "slug": "expanding-nut",
+    "title": "Expanding Nut",
+    "type": "gif",
+    "tags": ["brain", "animated", "absurd"],
+    "blurb": "Enlightenment, one questionable decision at a time.",
+    "spec": {
+      "template": "brain",
+      "palette": "volt",
+      "mascot": "none",
+      "lines": ["read the docs", "skim the docs", "ask the group chat", "guess and deploy"]
+    }
+  },
+  {
+    "id": "change-my-mind",
+    "slug": "change-my-mind",
+    "title": "Change My Mind",
+    "type": "image",
+    "tags": ["classic", "savage", "office"],
+    "blurb": "A folding table, a marker, and an opinion nobody asked for.",
+    "spec": {
+      "template": "billboard",
+      "palette": "acid",
+      "mascot": "none",
+      "lines": ["TABS BEAT", "SPACES", "CHANGE MY MIND"],
+      "note": "prove me wrong"
+    }
+  },
+  {
+    "id": "roll-safe",
+    "slug": "roll-safe-nut",
+    "title": "Roll Safe",
+    "type": "image",
+    "tags": ["brain", "reaction", "absurd"],
+    "blurb": "You cannot run out of coffee if you never had any.",
+    "spec": {
+      "template": "classic",
+      "palette": "sun",
+      "mascot": "point",
+      "lines": ["CAN'T LOSE THE GAME", "IF YOU DON'T PLAY"],
+      "note": "big brain time"
+    }
+  },
+  {
+    "id": "stonks",
+    "slug": "nutty-stonks",
+    "title": "Stonks",
+    "type": "gif",
+    "tags": ["crypto", "animated", "absurd"],
+    "blurb": "The line goes up. Do not ask why.",
+    "spec": {
+      "template": "starburst",
+      "palette": "acid",
+      "mascot": "none",
+      "lines": ["STONKS"],
+      "note": "not financial advice"
+    }
+  },
+  {
+    "id": "hodl",
+    "slug": "hodl-the-nuts",
+    "title": "HODL",
+    "type": "image",
+    "tags": ["crypto", "savage"],
+    "blurb": "Down eighty percent and somehow more confident than ever.",
+    "spec": {
+      "template": "billboard",
+      "palette": "grape",
+      "mascot": "dead",
+      "lines": ["HODL"],
+      "note": "we are still so early"
+    }
+  },
+  {
+    "id": "surprised-nut",
+    "slug": "surprised-nut",
+    "title": "Surprised Nut",
+    "type": "image",
+    "tags": ["reaction", "gaming"],
+    "blurb": "When the thing you ignored for a month is now on fire.",
+    "spec": {
+      "template": "classic",
+      "palette": "hot",
+      "mascot": "mindblown",
+      "lines": ["WHEN IT WORKS", "ON THE FIRST TRY"],
+      "note": "suspicious"
+    }
+  },
+  {
+    "id": "pointing-nuts",
+    "slug": "pointing-spider-nuts",
+    "title": "Pointing Spider Nuts",
+    "type": "image",
+    "tags": ["classic", "absurd", "office"],
+    "blurb": "Two identical parties accusing each other of being the copy.",
+    "spec": {
+      "template": "drake",
+      "palette": "volt",
+      "mascot": "none",
+      "lines": ["The bug in my code", "The bug in the library I copied it from"]
+    }
+  },
+  {
+    "id": "sad-nut",
+    "slug": "sad-nut-hours",
+    "title": "Sad Nut Hours",
+    "type": "gif",
+    "tags": ["reaction", "animated", "wholesome"],
+    "blurb": "It is 2am and the tests are red and so are your eyes.",
+    "spec": {
+      "template": "classic",
+      "palette": "volt",
+      "mascot": "cry",
+      "lines": ["IT WORKED", "ON MY MACHINE"],
+      "note": "sad nut hours"
+    }
+  },
+  {
+    "id": "galaxy-brain",
+    "slug": "galaxy-nut",
+    "title": "Galaxy Nut",
+    "type": "gif",
+    "tags": ["brain", "animated", "motivational"],
+    "blurb": "Ascended past logic, deadlines, and object permanence.",
+    "spec": {
+      "template": "brain",
+      "palette": "grape",
+      "mascot": "none",
+      "lines": ["fix the bug", "hide the bug", "document the bug as a feature", "charge extra for the feature"]
+    }
+  },
+  {
+    "id": "hello-there",
+    "slug": "hello-there",
+    "title": "Hello There",
+    "type": "image",
+    "tags": ["classic", "gaming", "reaction"],
+    "blurb": "General greetings from a high ground enthusiast.",
+    "spec": {
+      "template": "billboard",
+      "palette": "sun",
+      "mascot": "none",
+      "lines": ["HELLO", "THERE"],
+      "note": "general kenutty"
+    }
+  },
+  {
+    "id": "terminal-flex",
+    "slug": "sudo-make-me-a-nut",
+    "title": "sudo make me a nut",
+    "type": "gif",
+    "tags": ["office", "animated", "absurd"],
+    "blurb": "Nine out of ten shells recommend not running this.",
+    "spec": {
+      "template": "terminal",
+      "palette": "acid",
+      "mascot": "smug",
+      "lines": ["sudo make me a nut", "permission granted", "deploying deez...", "shipped to prod on a friday"]
+    }
+  },
+  {
+    "id": "404-nut",
+    "slug": "404-nut-not-found",
+    "title": "404 Nut Not Found",
+    "type": "gif",
+    "tags": ["office", "cursed", "animated"],
+    "blurb": "The nut you are looking for is in another repository.",
+    "spec": {
+      "template": "terminal",
+      "palette": "hot",
+      "mascot": "dead",
+      "lines": ["GET /deez/nutz", "404 not found", "did you mean: ligma?"]
+    }
+  },
+  {
+    "id": "you-guys-are-getting-paid",
+    "slug": "getting-paid",
+    "title": "You Guys Are Getting Paid?",
+    "type": "image",
+    "tags": ["office", "reaction", "savage"],
+    "blurb": "Asked quietly during the all hands about open source.",
+    "spec": {
+      "template": "classic",
+      "palette": "acid",
+      "mascot": "shrug",
+      "lines": ["YOU GUYS ARE", "GETTING PAID?"],
+      "note": "maintainers, probably"
+    }
+  },
+  {
+    "id": "one-does-not-simply",
+    "slug": "one-does-not-simply",
+    "title": "One Does Not Simply",
+    "type": "image",
+    "tags": ["classic", "office", "motivational"],
+    "blurb": "Walk into Mordor, or into a merge with forty conflicts.",
+    "spec": {
+      "template": "classic",
+      "palette": "grape",
+      "mascot": "point",
+      "lines": ["ONE DOES NOT SIMPLY", "REBASE ON MONDAY"],
+      "note": "the eye is watching your force push"
+    }
+  },
+  {
+    "id": "shut-up-and-take",
+    "slug": "shut-up-and-take-my-nuts",
+    "title": "Shut Up And Take My Nuts",
+    "type": "image",
+    "tags": ["classic", "crypto", "reaction"],
+    "blurb": "Wallet already open, judgment already gone.",
+    "spec": {
+      "template": "starburst",
+      "palette": "sun",
+      "mascot": "none",
+      "lines": ["SHUT UP AND", "TAKE MY NUTS"],
+      "note": "instant checkout"
+    }
+  },
+  {
+    "id": "wholesome-nut",
+    "slug": "you-are-doing-great",
+    "title": "You Are Doing Great",
+    "type": "image",
+    "tags": ["wholesome", "motivational"],
+    "blurb": "A rare sincere transmission from the peanut gallery.",
+    "spec": {
+      "template": "billboard",
+      "palette": "acid",
+      "mascot": "thumbsup",
+      "lines": ["YOU ARE", "DOING GREAT"],
+      "note": "no notes, keep going"
+    }
+  },
+  {
+    "id": "cursed-nut",
+    "slug": "cursed-nut",
+    "title": "Cursed Nut",
+    "type": "gif",
+    "tags": ["cursed", "animated", "absurd"],
+    "blurb": "Do not look directly at it. It is already in your recents.",
+    "spec": {
+      "template": "classic",
+      "palette": "grape",
+      "mascot": "dead",
+      "lines": ["I HAVE SEEN", "THINGS"],
+      "note": "you cannot unsee this"
+    }
+  },
+  {
+    "id": "first-try",
+    "slug": "he-doesnt-know",
+    "title": "He Doesn't Know",
+    "type": "image",
+    "tags": ["office", "reaction", "absurd"],
+    "blurb": "Table of nuts, all whispering, all judging.",
+    "spec": {
+      "template": "classic",
+      "palette": "volt",
+      "mascot": "smug",
+      "lines": ["HE STILL TESTS", "IN PRODUCTION"],
+      "note": "he doesn't know"
+    }
+  },
+  {
+    "id": "motivational-grind",
+    "slug": "rise-and-grind-nut",
+    "title": "Rise And Grind",
+    "type": "gif",
+    "tags": ["motivational", "animated", "crypto"],
+    "blurb": "The hustle never sleeps and neither do your bad decisions.",
+    "spec": {
+      "template": "starburst",
+      "palette": "volt",
+      "mascot": "none",
+      "lines": ["RISE", "AND", "GRIND"],
+      "note": "sleep is a position"
+    }
+  },
+  {
+    "id": "why-would-you-say",
+    "slug": "why-would-you-say-that",
+    "title": "Why Would You Say That",
+    "type": "image",
+    "tags": ["reaction", "office", "savage"],
+    "blurb": "Someone volunteered your team for the migration.",
+    "spec": {
+      "template": "classic",
+      "palette": "hot",
+      "mascot": "cry",
+      "lines": ["WHY WOULD YOU SAY", "SOMETHING SO BRAVE"],
+      "note": "and so wrong"
+    }
+  },
+  {
+    "id": "the-floor-is",
+    "slug": "the-floor-is-lava",
+    "title": "The Floor Is",
+    "type": "gif",
+    "tags": ["gaming", "animated", "absurd"],
+    "blurb": "A classic format with infinitely swappable stakes.",
+    "spec": {
+      "template": "brain",
+      "palette": "sun",
+      "mascot": "none",
+      "lines": ["the floor is unreviewed prs", "everyone leaves the office", "the intern stays", "the intern is now lead"]
+    }
+  },
+  {
+    "id": "nutty-approves",
+    "slug": "nutty-seal-of-approval",
+    "title": "Nutty Seal Of Approval",
+    "type": "image",
+    "tags": ["wholesome", "stamp", "office"],
+    "blurb": "Slap it on a PR and merge with confidence you have not earned.",
+    "spec": {
+      "template": "stamp",
+      "palette": "volt",
+      "mascot": "thumbsup",
+      "lines": ["NUTTY", "APPROVES"],
+      "note": "lgtm, shipping it"
+    }
+  }
+]
