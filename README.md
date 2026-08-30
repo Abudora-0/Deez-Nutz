@@ -1,0 +1,196 @@
+<p align="center">
+  <img src="docs/logo.svg" alt="Deez Nutz" width="560">
+</p>
+
+<h1 align="center">Deez Nutz</h1>
+
+<p align="center">
+  A neo brutalist arcade for downloading the internet's finest memes and gifs.<br>
+  Original art, rendered on the fly, free to grab.
+</p>
+
+<p align="center">
+  <a href="#license"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-c6ff3d?style=for-the-badge"></a>
+  <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-f5eddd?style=for-the-badge&logo=nextdotjs&logoColor=12100f">
+  <img alt="React 19" src="https://img.shields.io/badge/React-19-4d7cff?style=for-the-badge&logo=react&logoColor=white">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=for-the-badge&logo=typescript&logoColor=white">
+  <img alt="Tailwind CSS 4" src="https://img.shields.io/badge/Tailwind-4-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white">
+  <img alt="Motion" src="https://img.shields.io/badge/Motion-13-ff2e88?style=for-the-badge">
+  <a href="https://vercel.com/new/clone?repository-url=https://github.com/Abudora-0/Deez-Nutz"><img alt="Deploy with Vercel" src="https://img.shields.io/badge/deploy-vercel-000000?style=for-the-badge&logo=vercel"></a>
+  <img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-c6ff3d?style=for-the-badge">
+</p>
+
+<p align="center">
+  <b>Tags:</b>
+  memes &middot; gifs &middot; meme gallery &middot; reaction images &middot; nextjs &middot; react &middot; typescript &middot; tailwindcss &middot; framer motion &middot; vercel &middot; svg &middot; download
+</p>
+
+---
+
+## What is this
+
+Deez Nutz is a single page meme and gif arcade with a look that does not come from
+a component library. Hard shadows, chunky borders, oversized type, halftone texture,
+a CRT wash, and every control tuned to match: the scrollbar, the counters, the
+dropdowns, the toggles, and the cursor.
+
+Every meme is **original art**. There is no scraping, no reposting, and no third
+party API. A small hand written SVG engine turns a compact spec into a finished
+1200 by 1200 image, animated when the spec asks for it. Downloads are rasterized to
+PNG in the browser, or handed to you as an animated SVG.
+
+## Features
+
+- **Animated logo.** A peanut that cracks open on load and on hover, with a kinetic
+  wordmark.
+- **Themed controls.** Custom scrollbar, a scroll progress bar, rolling odometer
+  counters, spring loaded dropdowns, chunky toggles, a crosshair cursor, and themed
+  context menus. Five swappable accent colors, remembered per device.
+- **Command palette.** Press `K` anywhere for fuzzy search, quick navigation, and
+  one shot actions.
+- **One click download.** Grab a PNG or an animated SVG, copy the image to the
+  clipboard, or copy a share link. A confetti burst and a live counter come free.
+- **Download packs.** Flip on pack mode, select as many memes as you like, and pull
+  them all down as a single zip.
+- **Favorites.** Tap the nut on any card to build a stash, saved in local storage,
+  with its own page and a one click zip.
+- **Meme of the day.** A deterministic pick that rolls over at midnight UTC.
+- **Chaos mode.** Reshuffles and rattles the whole grid. Do not press it.
+- **Deep links and modals.** Opening a card from the grid shows a shareable modal
+  without leaving the page. The same URL loads a full page on refresh, with its own
+  Open Graph image.
+- **Keyboard first.** Arrow keys move through the grid, `D` downloads the focused
+  meme, `F` favorites it, `Esc` closes everything.
+- **Konami code.** Up up down down left right left right b a.
+- **Accessible and honest.** Reduced motion is respected everywhere, there is no
+  account, no database, and no tracking.
+
+## Tech stack
+
+| Area        | Choice                                              |
+| ----------- | --------------------------------------------------- |
+| Framework   | Next.js 16 App Router, React 19                     |
+| Language    | TypeScript, strict                                  |
+| Styling     | Tailwind CSS 4 with a custom token layer            |
+| Animation   | Motion (Framer Motion)                              |
+| Primitives  | Radix UI (select, switch, context menu), cmdk       |
+| Packaging   | JSZip for download packs                            |
+| Art         | A dependency free SVG renderer in `lib/art.ts`      |
+| Fonts       | Archivo Black, Space Grotesk, JetBrains Mono, self hosted |
+| Hosting     | Vercel, zero config                                 |
+
+## Screenshots
+
+> Drop your own captures in `docs/` and link them here.
+
+| Gallery | Meme view | Command palette |
+| ------- | --------- | --------------- |
+| `docs/screenshot-gallery.png` | `docs/screenshot-meme.png` | `docs/screenshot-command.png` |
+
+## Getting started
+
+```bash
+git clone https://github.com/Abudora-0/Deez-Nutz.git
+cd Deez-Nutz
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+There are no environment variables. The whole site runs on local data.
+
+### Scripts
+
+| Command             | Does                          |
+| ------------------- | ----------------------------- |
+| `npm run dev`       | Start the dev server          |
+| `npm run build`     | Production build              |
+| `npm run start`     | Serve the production build    |
+| `npm run lint`      | ESLint                        |
+| `npm run typecheck` | TypeScript, no emit           |
+
+## Project structure
+
+```
+app/
+  layout.tsx              root shell, fonts, providers, chrome
+  page.tsx                hero plus the gallery
+  meme/[slug]/            full meme page, generateStaticParams, OG image
+  @modal/(.)meme/[slug]/  intercepting modal for the same route
+  favorites/  about/      supporting pages
+  sitemap.ts  robots.ts   metadata routes
+components/
+  logo/                   the animated logo
+  chrome/                 header, footer, cursor, scroll bar, ticker, konami
+  gallery/                hero, gallery client, toolbar, favorites
+  meme/                   card, art, detail, modal, download button
+  ui/                     select, switch, odometer, command palette, confetti
+  providers/              app state context
+lib/
+  art.ts                  the SVG meme renderer, single source of truth
+  memes.ts  types.ts      catalog and query helpers
+  download.ts             png, svg, clipboard, zip
+  favorites.ts  stats.ts  local storage stores
+data/
+  memes.json              the catalog
+```
+
+## Adding a meme
+
+Append an entry to `data/memes.json`:
+
+```json
+{
+  "id": "unique-id",
+  "slug": "url-slug",
+  "title": "Readable Title",
+  "type": "image",
+  "tags": ["reaction", "office"],
+  "blurb": "One line of context.",
+  "spec": {
+    "template": "classic",
+    "palette": "acid",
+    "mascot": "grin",
+    "lines": ["TOP LINE", "BOTTOM LINE"],
+    "note": "small footnote"
+  }
+}
+```
+
+Templates: `classic`, `starburst`, `stamp`, `drake`, `brain`, `terminal`, `billboard`.
+Palettes: `acid`, `hot`, `volt`, `sun`, `grape`, `mono`.
+Mascot poses: `grin`, `shades`, `thumbsup`, `shrug`, `point`, `flames`, `cry`, `dead`, `smug`, `mindblown`, `none`.
+Set `"type": "gif"` to turn on animation.
+
+## Deployment
+
+The project is a stock Next.js app, so Vercel needs no configuration.
+
+1. Push to GitHub.
+2. Import the repo at [vercel.com/new](https://vercel.com/new).
+3. Deploy.
+
+Or use the button:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Abudora-0/Deez-Nutz)
+
+## Contributing
+
+Issues and pull requests are welcome. Keep the house rules:
+
+- No em dashes anywhere in the code, copy, or commit messages.
+- Run `npm run lint` and `npm run build` before opening a PR.
+- New memes go in `data/memes.json`, not in new components.
+
+## Disclaimer
+
+All art on this site is original work by the project and its contributors, released
+under the MIT license. The names of well known meme formats are used as cultural
+shorthand only. Nothing here is scraped, mirrored, or reposted from another source.
+If you believe something infringes your rights, open an issue and it will be handled
+quickly.
+
+## License
+
+[MIT](LICENSE) &copy; 2026 Abudora-0

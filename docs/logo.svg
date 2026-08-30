@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 180" width="760" height="180" font-family="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif">
+  <rect width="760" height="180" fill="#12100f"/>
+  <g transform="translate(90 90)">
+    <path d="M0,24 L9,50 L36,50 L14,66 L22,94 L0,77 L-22,94 L-14,66 L-36,50 L-9,50 Z" transform="translate(0,-30) scale(0.9)" fill="#c6ff3d" stroke="#12100f" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M-4,-64 L-12,-44 L-2,-32 L-14,-16 L-4,0 L-12,18 L-4,36 C-38,34 -50,-2 -38,-34 C-31,-54 -20,-64 -4,-64 Z" fill="#f5eddd" stroke="#12100f" stroke-width="6" stroke-linejoin="round" transform="translate(2 6)"/>
+    <path d="M4,-64 L12,-44 L2,-32 L14,-16 L4,0 L12,18 L4,36 C38,34 50,-2 38,-34 C31,-54 20,-64 4,-64 Z" fill="#f5eddd" stroke="#12100f" stroke-width="6" stroke-linejoin="round" transform="translate(6 6)"/>
+  </g>
+  <text x="170" y="118" font-size="96" fill="#f5eddd" letter-spacing="2">DEEZ</text>
+  <text x="450" y="118" font-size="96" fill="#c6ff3d" letter-spacing="2">NUTZ</text>
+  <text x="172" y="150" font-family="'JetBrains Mono', monospace" font-size="15" fill="#b9ae98" letter-spacing="6">MEME AND GIF ARCADE</text>
+</svg>
