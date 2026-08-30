@@ -68,7 +68,7 @@ export function Hero({ motd: initialMotd }: { motd: Meme }) {
             onClick={randomMeme}
             className="brutal-border brutal-shadow bg-surface px-5 py-3 font-mono text-sm font-bold uppercase tracking-widest text-fg"
           >
-            Random nut ⚄
+            Random nut ►
           </MagneticButton>
         </div>
 
