@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { MEMES } from "@/lib/memes";
-
-const SITE = "https://deez-nutz.vercel.app";
+import { SITE_URL as SITE } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

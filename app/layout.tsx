@@ -10,6 +10,7 @@ import { ScrollProgress } from "@/components/chrome/ScrollProgress";
 import { Toaster } from "@/components/chrome/Toaster";
 import { KonamiEasterEgg } from "@/components/chrome/KonamiEasterEgg";
 import { CommandPalette } from "@/components/ui/CommandPalette";
+import { SITE_URL } from "@/lib/site";
 
 const display = Archivo_Black({
   weight: "400",
@@ -28,7 +29,7 @@ const mono = JetBrains_Mono({
   display: "swap",
 });
 
-const SITE = "https://deez-nutz.vercel.app";
+const SITE = SITE_URL;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),

@@ -1,4 +1,5 @@
 import type { Meme, MascotPose, Palette } from "./types";
+import { SITE_HOST } from "./site";
 
 /*
   Pure SVG renderer for Deez Nutz meme art.
@@ -393,7 +394,7 @@ export function memeSvg(m: Meme, opts: RenderOptions = {}): string {
     opts.mark === false
       ? ""
       : `<text x="${SIZE - 40}" y="${SIZE - 34}" text-anchor="end" font-family="${MONO}" font-size="22"
-          fill="${c.ink}" opacity="0.55">deez-nutz.vercel.app</text>`;
+          fill="${c.ink}" opacity="0.55">${SITE_HOST}</text>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE}" height="${SIZE}" role="img" aria-label="${esc(
     m.title,
   )}">

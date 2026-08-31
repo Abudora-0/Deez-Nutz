@@ -1,6 +1,7 @@
 import type { Meme } from "./types";
 import { memeSvg } from "./art";
 import { bumpDownloads } from "./stats";
+import { SITE_URL } from "./site";
 
 function triggerBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
@@ -81,7 +82,7 @@ export async function downloadPack(memes: Meme[], onProgress?: (done: number, to
     "README.txt",
     [
       "Deez Nutz meme pack",
-      "https://deez-nutz.vercel.app",
+      SITE_URL,
       "",
       "All art in this pack is original and released under the MIT license.",
       "Go forth and post responsibly.",

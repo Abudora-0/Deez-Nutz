@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getMeme } from "@/lib/memes";
 import { memeSvg } from "@/lib/art";
+import { SITE_HOST } from "@/lib/site";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -61,7 +62,7 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
           </div>
           <div style={{ fontSize: 26, color: "#b9ae98", marginTop: 16 }}>{meme.blurb}</div>
           <div style={{ fontSize: 22, color: "#f5eddd", marginTop: "auto", letterSpacing: 2 }}>
-            free download at deez-nutz.vercel.app
+            free download at {SITE_HOST}
           </div>
         </div>
       </div>
