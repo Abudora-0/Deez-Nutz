@@ -1,5 +1,8 @@
-import type { Meme, MascotPose, Palette } from "./types";
+import type { Meme, MemeSpec, MascotPose, Palette } from "./types";
 import { SITE_HOST } from "./site";
+
+/** a meme that is guaranteed to carry a render spec */
+type ArtMeme = Meme & { spec: MemeSpec };
 
 /*
   Pure SVG renderer for Deez Nutz meme art.
@@ -162,7 +165,7 @@ function stackedText(lines: string[], c: Colors, cy: number, gap: number, size: 
     .join("");
 }
 
-function tmplClassic(m: Meme, c: Colors, animated: boolean): string {
+function tmplClassic(m: ArtMeme, c: Colors, animated: boolean): string {
   const longest = m.spec.lines.reduce((a, b) => (a.length > b.length ? a : b), "");
   const size = fit(longest, 132, 66);
   const bottomAnchor = m.spec.note ? SIZE - 150 : SIZE - 96;
@@ -192,7 +195,7 @@ function tmplClassic(m: Meme, c: Colors, animated: boolean): string {
     ${note(m, c)}`;
 }
 
-function tmplStarburst(m: Meme, c: Colors, animated: boolean): string {
+function tmplStarburst(m: ArtMeme, c: Colors, animated: boolean): string {
   const pts: string[] = [];
   const spikes = 22;
   for (let i = 0; i < spikes * 2; i++) {
@@ -214,7 +217,7 @@ function tmplStarburst(m: Meme, c: Colors, animated: boolean): string {
     ${note(m, c)}`;
 }
 
-function tmplStamp(m: Meme, c: Colors, animated: boolean): string {
+function tmplStamp(m: ArtMeme, c: Colors, animated: boolean): string {
   const longest = m.spec.lines.reduce((a, b) => (a.length > b.length ? a : b), "");
   const size = fit(longest, 118, 54);
   const thump = animated
@@ -242,7 +245,7 @@ function tmplStamp(m: Meme, c: Colors, animated: boolean): string {
     ${note(m, c)}`;
 }
 
-function tmplDrake(m: Meme, c: Colors, animated: boolean): string {
+function tmplDrake(m: ArtMeme, c: Colors, animated: boolean): string {
   const a = m.spec.lines[0] ?? "";
   const b = m.spec.lines[1] ?? "";
   const sz = 60;
@@ -290,7 +293,7 @@ function tmplDrake(m: Meme, c: Colors, animated: boolean): string {
       .join("")}`;
 }
 
-function tmplBrain(m: Meme, c: Colors, animated: boolean): string {
+function tmplBrain(m: ArtMeme, c: Colors, animated: boolean): string {
   const rows = m.spec.lines.slice(0, 4);
   const h = (SIZE - 28) / rows.length;
   const glows = ["0.15", "0.4", "0.7", "1"];
@@ -316,7 +319,7 @@ function tmplBrain(m: Meme, c: Colors, animated: boolean): string {
     ${note(m, c)}`;
 }
 
-function tmplTerminal(m: Meme, c: Colors, animated: boolean): string {
+function tmplTerminal(m: ArtMeme, c: Colors, animated: boolean): string {
   const lines = m.spec.lines.slice(0, 6);
   const blink = animated
     ? `<animate attributeName="opacity" values="1;1;0;0" dur="1s" repeatCount="indefinite"/>`
@@ -339,7 +342,7 @@ function tmplTerminal(m: Meme, c: Colors, animated: boolean): string {
     <g transform="translate(1000 1020) scale(0.7)">${mascot(m.spec.mascot, c)}</g>`;
 }
 
-function tmplBillboard(m: Meme, c: Colors, animated: boolean): string {
+function tmplBillboard(m: ArtMeme, c: Colors, animated: boolean): string {
   const longest = m.spec.lines.reduce((a, b) => (a.length > b.length ? a : b), "");
   const size = fit(longest, 260, 90, 0.52);
   const slide = animated
@@ -360,7 +363,7 @@ function tmplBillboard(m: Meme, c: Colors, animated: boolean): string {
     ${note(m, c, c.paper)}`;
 }
 
-function note(m: Meme, c: Colors, color?: string): string {
+function note(m: ArtMeme, c: Colors, color?: string): string {
   if (!m.spec.note) return "";
   return `<text x="${SIZE / 2}" y="${SIZE - 60}" text-anchor="middle" font-family="${MONO}"
     font-size="26" fill="${color ?? c.ink}" opacity="0.75" style="letter-spacing:2px">${esc(
@@ -368,7 +371,7 @@ function note(m: Meme, c: Colors, color?: string): string {
     )}</text>`;
 }
 
-const TEMPLATES: Record<string, (m: Meme, c: Colors, a: boolean) => string> = {
+const TEMPLATES: Record<string, (m: ArtMeme, c: Colors, a: boolean) => string> = {
   classic: tmplClassic,
   starburst: tmplStarburst,
   stamp: tmplStamp,
@@ -385,7 +388,15 @@ export interface RenderOptions {
   mark?: boolean;
 }
 
-export function memeSvg(m: Meme, opts: RenderOptions = {}): string {
+export function memeSvg(input: Meme, opts: RenderOptions = {}): string {
+  if (!input.spec) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE}" height="${SIZE}" role="img" aria-label="${esc(
+      input.title,
+    )}"><rect width="${SIZE}" height="${SIZE}" fill="#211c19"/><text x="${SIZE / 2}" y="${SIZE / 2}" text-anchor="middle" font-family="${DISPLAY}" font-size="90" fill="#f5eddd">${esc(
+      input.title.toUpperCase(),
+    )}</text></svg>`;
+  }
+  const m = input as ArtMeme;
   const c = PALETTES[m.spec.palette] ?? PALETTES.acid;
   const animated = opts.animated ?? m.type === "gif";
   const render = TEMPLATES[m.spec.template] ?? tmplClassic;

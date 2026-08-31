@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import type { SortKey } from "@/lib/types";
+import type { Meme, MemeSource, SortKey } from "@/lib/types";
 import { queryMemes } from "@/lib/memes";
 import { stagger } from "@/lib/motion";
 import { MemeCard } from "@/components/meme/MemeCard";
@@ -12,7 +12,16 @@ import { useAppState } from "@/components/providers/AppState";
 import { downloadPng, downloadPack } from "@/lib/download";
 import { useFavorites } from "@/lib/favorites";
 
-export function GalleryClient() {
+type SourceFilter = "all" | MemeSource;
+
+const SOURCE_TABS: { id: SourceFilter; label: string }[] = [
+  { id: "all", label: "Everything" },
+  { id: "original", label: "Originals" },
+  { id: "imgflip", label: "Templates" },
+  { id: "giphy", label: "Trending" },
+];
+
+export function GalleryClient({ items }: { items: Meme[] }) {
   const params = useSearchParams();
   const { selectMode, selected, toggleSelected, clearSelected, chaos, chaosNonce, pushToast } =
     useAppState();
@@ -24,16 +33,28 @@ export function GalleryClient() {
     return t ? [t] : [];
   });
   const [sortPref, setSortPref] = useState<SortKey>("curated");
+  const [srcFilter, setSrcFilter] = useState<SourceFilter>("all");
   const gridRef = useRef<HTMLDivElement>(null);
 
   // chaos overrides the sort and forces a fresh shuffle seed
   const sort: SortKey = chaos ? "fresh" : sortPref;
   const seed = chaos ? chaosNonce * 7919 : 1;
 
-  const results = useMemo(
-    () => queryMemes({ query, tags, sort, seed }),
-    [query, tags, sort, seed],
+  const scoped = useMemo(
+    () => (srcFilter === "all" ? items : items.filter((m) => m.source === srcFilter)),
+    [items, srcFilter],
   );
+
+  const results = useMemo(
+    () => queryMemes(scoped, { query, tags, sort, seed }),
+    [scoped, query, tags, sort, seed],
+  );
+
+  const sourceCounts = useMemo(() => {
+    const c: Record<SourceFilter, number> = { all: items.length, original: 0, imgflip: 0, giphy: 0 };
+    for (const m of items) c[m.source] += 1;
+    return c;
+  }, [items]);
 
   const toggleTag = useCallback(
     (t: string) => setTags((cur) => (cur.includes(t) ? cur.filter((x) => x !== t) : [...cur, t])),
@@ -86,7 +107,7 @@ export function GalleryClient() {
         case "f":
         case "F":
           if (cur >= 0) {
-            toggleFav(results[cur].id);
+            toggleFav(results[cur]);
             pushToast("favorite toggled");
           }
           break;
@@ -115,7 +136,29 @@ export function GalleryClient() {
 
   return (
     <div id="gallery" className="flex flex-col gap-6">
+      <div className="flex flex-wrap gap-2">
+        {SOURCE_TABS.map((tab) => {
+          const count = sourceCounts[tab.id];
+          if (tab.id !== "all" && count === 0) return null;
+          const on = srcFilter === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setSrcFilter(tab.id)}
+              aria-pressed={on}
+              className={`brutal-border px-3 py-2 font-mono text-xs font-bold uppercase tracking-widest transition-transform hover:-translate-y-0.5 ${
+                on ? "bg-acid text-bg" : "bg-surface text-fg"
+              }`}
+            >
+              {tab.label}
+              <span className="ml-2 opacity-60">{count}</span>
+            </button>
+          );
+        })}
+      </div>
+
       <Toolbar
+        items={scoped}
         query={query}
         setQuery={setQuery}
         tags={tags}

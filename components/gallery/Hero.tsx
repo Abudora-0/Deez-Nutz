@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import type { Meme } from "@/lib/types";
-import { MEMES, ALL_TAGS, seededShuffle, memeOfTheDay } from "@/lib/memes";
+import { MEMES, ORIGINAL_TAGS, seededShuffle, memeOfTheDay } from "@/lib/memes";
 import { MemeArt } from "@/components/meme/MemeArt";
 import { DownloadButton } from "@/components/meme/DownloadButton";
 import { MagneticButton } from "@/components/ui/MagneticButton";
@@ -80,7 +80,7 @@ export function Hero({ motd: initialMotd }: { motd: Meme }) {
           </div>
           <div>
             <dt className="sr-only">tags</dt>
-            <dd className="text-2xl text-fg"><Odometer value={ALL_TAGS.length} /></dd>
+            <dd className="text-2xl text-fg"><Odometer value={ORIGINAL_TAGS.length} /></dd>
             <span>categories</span>
           </div>
           <div>

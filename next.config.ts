@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "media2.giphy.com" },
       { protocol: "https", hostname: "media3.giphy.com" },
       { protocol: "https", hostname: "media4.giphy.com" },
+      { protocol: "https", hostname: "i.giphy.com" },
+      { protocol: "https", hostname: "i.imgflip.com" },
       { protocol: "https", hostname: "upload.wikimedia.org" },
     ],
   },

@@ -9,7 +9,8 @@ import { MemeArt } from "./MemeArt";
 import { popIn } from "@/lib/motion";
 import { useFavorites } from "@/lib/favorites";
 import { useAppState } from "@/components/providers/AppState";
-import { downloadPng, downloadSvg, copyPngToClipboard } from "@/lib/download";
+import { downloadMeme, downloadSvg, copyImageToClipboard } from "@/lib/download";
+import { isOriginal } from "@/lib/types";
 import { usePrefersReducedMotion } from "@/lib/hooks";
 
 interface Props {
@@ -59,7 +60,7 @@ export function MemeCard({ meme, index }: Props) {
             <MemeArt meme={meme} live={hover} className="h-full w-full" />
 
             <span className="absolute left-2 top-2 brutal-border bg-bg px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-acid">
-              {meme.type === "gif" ? "GIF" : "IMG"}
+              {meme.source === "imgflip" ? "REMIX" : meme.type === "gif" ? "GIF" : "IMG"}
             </span>
 
             {selectMode && (
@@ -80,7 +81,7 @@ export function MemeCard({ meme, index }: Props) {
                 aria-label={fav ? "remove from favorites" : "add to favorites"}
                 aria-pressed={fav}
                 onClick={() => {
-                  toggle(meme.id);
+                  toggle(meme);
                   pushToast(fav ? "unfavorited" : "favorited");
                 }}
                 className={`shrink-0 text-lg leading-none transition-transform hover:scale-125 ${
@@ -107,14 +108,19 @@ export function MemeCard({ meme, index }: Props) {
       <ContextMenu.Portal>
         <ContextMenu.Content className="anim-pop z-[90] w-52 brutal-border bg-surface shadow-[6px_6px_0_0_var(--line)]">
           {[
-            ["Download PNG", () => downloadPng(meme).then(() => pushToast("snagged the png"))],
-            ["Download SVG", () => { downloadSvg(meme); pushToast("snagged the svg"); }],
-            ["Copy image", async () => pushToast((await copyPngToClipboard(meme)) ? "image copied" : "clipboard blocked")],
+            [
+              meme.source === "imgflip" ? "Download blank" : "Download",
+              () => downloadMeme(meme).then(() => pushToast("snagged it")),
+            ],
+            ...(isOriginal(meme)
+              ? ([["Download SVG", () => { downloadSvg(meme); pushToast("snagged the svg"); }]] as [string, () => void][])
+              : []),
+            ["Copy image", async () => pushToast((await copyImageToClipboard(meme)) ? "image copied" : "cannot copy this one")],
             ["Copy share link", async () => {
               await navigator.clipboard.writeText(`${window.location.origin}/meme/${meme.slug}`);
               pushToast("link copied");
             }],
-            [fav ? "Unfavorite" : "Favorite", () => toggle(meme.id)],
+            [fav ? "Unfavorite" : "Favorite", () => toggle(meme)],
           ].map(([label, fn]) => (
             <ContextMenu.Item
               key={label as string}

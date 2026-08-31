@@ -3,6 +3,9 @@ import { Hero } from "@/components/gallery/Hero";
 import { GalleryClient } from "@/components/gallery/GalleryClient";
 import { Ticker } from "@/components/chrome/Ticker";
 import { memeOfTheDay } from "@/lib/memes";
+import { loadGallery } from "@/lib/gallery";
+
+export const revalidate = 3600;
 
 const TICKER = [
   "deez nutz",
@@ -10,13 +13,14 @@ const TICKER = [
   "free real estate",
   "download responsibly",
   "no login walls",
-  "original art only",
+  "originals plus live trending",
   "zip the whole stash",
   "press K for the menu",
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
   const motd = memeOfTheDay();
+  const { items, counts, giphyEnabled } = await loadGallery();
 
   return (
     <div className="flex flex-col gap-10">
@@ -25,8 +29,15 @@ export default function HomePage() {
       <Ticker items={TICKER} className="-mx-4" />
 
       <Suspense fallback={<GalleryFallback />}>
-        <GalleryClient />
+        <GalleryClient items={items} />
       </Suspense>
+
+      <p className="text-center font-mono text-[11px] uppercase tracking-widest text-fg-dim">
+        {counts.originals} originals
+        {counts.templates > 0 && ` + ${counts.templates} templates`}
+        {counts.trending > 0 && ` + ${counts.trending} trending`}
+        {giphyEnabled ? " · powered by GIPHY" : ""}
+      </p>
     </div>
   );
 }

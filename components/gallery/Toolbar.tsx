@@ -1,14 +1,16 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion } from "motion/react";
-import type { SortKey } from "@/lib/types";
-import { ALL_TAGS, tagCount } from "@/lib/memes";
+import type { Meme, SortKey } from "@/lib/types";
+import { allTags, tagCount } from "@/lib/memes";
 import { Select } from "@/components/ui/Select";
 import { Switch } from "@/components/ui/Switch";
 import { Odometer } from "@/components/ui/Odometer";
 import { useAppState } from "@/components/providers/AppState";
 
 interface Props {
+  items: Meme[];
   query: string;
   setQuery: (v: string) => void;
   tags: string[];
@@ -29,8 +31,9 @@ const SORTS: { value: SortKey; label: string }[] = [
 ];
 
 export function Toolbar(props: Props) {
-  const { query, setQuery, tags, toggleTag, clearTags, sort, setSort, chaosLocked, resultCount } = props;
+  const { items, query, setQuery, tags, toggleTag, clearTags, sort, setSort, chaosLocked, resultCount } = props;
   const { selectMode, setSelectMode, chaos, toggleChaos } = useAppState();
+  const tagList = useMemo(() => allTags(items), [items]);
 
   return (
     <div className="flex flex-col gap-4 brutal-border brutal-shadow bg-surface p-4">
@@ -64,7 +67,7 @@ export function Toolbar(props: Props) {
 
       <div className="flex flex-wrap items-center gap-2">
         <span className="font-mono text-xs font-bold uppercase tracking-widest text-fg-dim">tags</span>
-        {ALL_TAGS.map((t) => {
+        {tagList.map((t) => {
           const on = tags.includes(t);
           return (
             <button
@@ -76,7 +79,7 @@ export function Toolbar(props: Props) {
               }`}
             >
               {t}
-              <span className="ml-1 opacity-60">{tagCount(t)}</span>
+              <span className="ml-1 opacity-60">{tagCount(items, t)}</span>
             </button>
           );
         })}

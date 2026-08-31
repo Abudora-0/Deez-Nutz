@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { MEMES } from "@/lib/memes";
 import { useFavorites } from "@/lib/favorites";
 import { MemeCard } from "@/components/meme/MemeCard";
 import { stagger } from "@/lib/motion";
@@ -11,11 +10,9 @@ import { useAppState } from "@/components/providers/AppState";
 import { useState } from "react";
 
 export function FavoritesClient() {
-  const { ids, ready, clear } = useFavorites();
+  const { items: stash, ready, clear } = useFavorites();
   const { pushToast } = useAppState();
   const [packing, setPacking] = useState(false);
-
-  const stash = MEMES.filter((m) => ids.includes(m.id));
 
   const zipStash = async () => {
     setPacking(true);

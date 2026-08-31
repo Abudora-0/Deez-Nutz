@@ -1,9 +1,13 @@
 import raw from "@/data/memes.json";
 import type { Meme, SortKey } from "./types";
 
-export const MEMES: Meme[] = raw as Meme[];
+/** the hand drawn originals, always available, no network */
+export const MEMES: Meme[] = (raw as Omit<Meme, "source">[]).map((m) => ({
+  ...m,
+  source: "original" as const,
+}));
 
-export const ALL_TAGS: string[] = Array.from(
+export const ORIGINAL_TAGS: string[] = Array.from(
   new Set(MEMES.flatMap((m) => m.tags)),
 ).sort();
 
@@ -11,11 +15,15 @@ export function getMeme(slug: string): Meme | undefined {
   return MEMES.find((m) => m.slug === slug);
 }
 
-export function tagCount(tag: string): number {
-  return MEMES.filter((m) => m.tags.includes(tag)).length;
+export function tagCount(list: Meme[], tag: string): number {
+  return list.filter((m) => m.tags.includes(tag)).length;
 }
 
-/** deterministic pick that changes once per day */
+export function allTags(list: Meme[]): string[] {
+  return Array.from(new Set(list.flatMap((m) => m.tags))).sort();
+}
+
+/** deterministic pick from the originals that changes once per day */
 export function memeOfTheDay(date = new Date()): Meme {
   const key = Number(
     `${date.getUTCFullYear()}${String(date.getUTCMonth() + 1).padStart(2, "0")}${String(
@@ -44,8 +52,11 @@ export interface QueryArgs {
   seed?: number;
 }
 
-export function queryMemes({ query = "", tags = [], sort = "curated", seed = 1 }: QueryArgs): Meme[] {
-  let list = MEMES;
+export function queryMemes(
+  items: Meme[],
+  { query = "", tags = [], sort = "curated", seed = 1 }: QueryArgs,
+): Meme[] {
+  let list = items;
 
   if (tags.length) {
     list = list.filter((m) => tags.every((t) => m.tags.includes(t)));
@@ -58,7 +69,7 @@ export function queryMemes({ query = "", tags = [], sort = "curated", seed = 1 }
         m.title.toLowerCase().includes(q) ||
         m.blurb.toLowerCase().includes(q) ||
         m.tags.some((t) => t.includes(q)) ||
-        m.spec.lines.join(" ").toLowerCase().includes(q),
+        (m.spec?.lines.join(" ").toLowerCase().includes(q) ?? false),
     );
   }
 
