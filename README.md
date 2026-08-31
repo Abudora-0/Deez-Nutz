@@ -10,6 +10,10 @@
 </p>
 
 <p align="center">
+  <b><a href="https://deez-nutzz.vercel.app">deez-nutzz.vercel.app</a></b>
+</p>
+
+<p align="center">
   <a href="#license"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-c6ff3d?style=for-the-badge"></a>
   <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-f5eddd?style=for-the-badge&logo=nextdotjs&logoColor=12100f">
   <img alt="React 19" src="https://img.shields.io/badge/React-19-4d7cff?style=for-the-badge&logo=react&logoColor=white">
