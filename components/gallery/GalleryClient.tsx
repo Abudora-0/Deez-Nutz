@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import type { Meme, MemeSource, SortKey } from "@/lib/types";
+import type { Meme, MemeKind, SortKey } from "@/lib/types";
+import { memeKind } from "@/lib/types";
 import { queryMemes } from "@/lib/memes";
 import { stagger } from "@/lib/motion";
 import { MemeCard } from "@/components/meme/MemeCard";
@@ -12,13 +13,14 @@ import { useAppState } from "@/components/providers/AppState";
 import { downloadPng, downloadPack } from "@/lib/download";
 import { useFavorites } from "@/lib/favorites";
 
-type SourceFilter = "all" | MemeSource;
+type KindFilter = "all" | MemeKind;
 
-const SOURCE_TABS: { id: SourceFilter; label: string }[] = [
+const KIND_TABS: { id: KindFilter; label: string }[] = [
   { id: "all", label: "Everything" },
-  { id: "original", label: "Originals" },
-  { id: "imgflip", label: "Templates" },
-  { id: "giphy", label: "Trending" },
+  { id: "originals", label: "Originals" },
+  { id: "templates", label: "Templates" },
+  { id: "gifs", label: "GIFs" },
+  { id: "fresh", label: "Fresh" },
 ];
 
 export function GalleryClient({ items }: { items: Meme[] }) {
@@ -33,7 +35,7 @@ export function GalleryClient({ items }: { items: Meme[] }) {
     return t ? [t] : [];
   });
   const [sortPref, setSortPref] = useState<SortKey>("curated");
-  const [srcFilter, setSrcFilter] = useState<SourceFilter>("all");
+  const [kindFilter, setKindFilter] = useState<KindFilter>("all");
   const gridRef = useRef<HTMLDivElement>(null);
 
   // chaos overrides the sort and forces a fresh shuffle seed
@@ -41,8 +43,9 @@ export function GalleryClient({ items }: { items: Meme[] }) {
   const seed = chaos ? chaosNonce * 7919 : 1;
 
   const scoped = useMemo(
-    () => (srcFilter === "all" ? items : items.filter((m) => m.source === srcFilter)),
-    [items, srcFilter],
+    () =>
+      kindFilter === "all" ? items : items.filter((m) => memeKind(m.source) === kindFilter),
+    [items, kindFilter],
   );
 
   const results = useMemo(
@@ -50,9 +53,15 @@ export function GalleryClient({ items }: { items: Meme[] }) {
     [scoped, query, tags, sort, seed],
   );
 
-  const sourceCounts = useMemo(() => {
-    const c: Record<SourceFilter, number> = { all: items.length, original: 0, imgflip: 0, giphy: 0 };
-    for (const m of items) c[m.source] += 1;
+  const kindCounts = useMemo(() => {
+    const c: Record<KindFilter, number> = {
+      all: items.length,
+      originals: 0,
+      templates: 0,
+      gifs: 0,
+      fresh: 0,
+    };
+    for (const m of items) c[memeKind(m.source)] += 1;
     return c;
   }, [items]);
 
@@ -137,14 +146,14 @@ export function GalleryClient({ items }: { items: Meme[] }) {
   return (
     <div id="gallery" className="flex flex-col gap-6">
       <div className="flex flex-wrap gap-2">
-        {SOURCE_TABS.map((tab) => {
-          const count = sourceCounts[tab.id];
+        {KIND_TABS.map((tab) => {
+          const count = kindCounts[tab.id];
           if (tab.id !== "all" && count === 0) return null;
-          const on = srcFilter === tab.id;
+          const on = kindFilter === tab.id;
           return (
             <button
               key={tab.id}
-              onClick={() => setSrcFilter(tab.id)}
+              onClick={() => setKindFilter(tab.id)}
               aria-pressed={on}
               className={`brutal-border px-3 py-2 font-mono text-xs font-bold uppercase tracking-widest transition-transform hover:-translate-y-0.5 ${
                 on ? "bg-acid text-bg" : "bg-surface text-fg"

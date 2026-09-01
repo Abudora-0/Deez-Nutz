@@ -35,7 +35,24 @@ export interface MemeSpec {
 }
 
 /** where a gallery item comes from */
-export type MemeSource = "original" | "giphy" | "imgflip";
+export type MemeSource = "original" | "giphy" | "imgflip" | "tenor" | "reddit";
+
+/** the content category a source belongs to, used for the gallery tabs */
+export type MemeKind = "originals" | "templates" | "gifs" | "fresh";
+
+export function memeKind(source: MemeSource): MemeKind {
+  switch (source) {
+    case "original":
+      return "originals";
+    case "imgflip":
+      return "templates";
+    case "giphy":
+    case "tenor":
+      return "gifs";
+    case "reddit":
+      return "fresh";
+  }
+}
 
 /** real hosted media for giphy gifs and imgflip templates */
 export interface MemeMedia {
@@ -67,7 +84,10 @@ export interface Meme {
 }
 
 export type OriginalMeme = Meme & { source: "original"; spec: MemeSpec };
-export type HostedMeme = Meme & { source: "giphy" | "imgflip"; media: MemeMedia };
+export type HostedMeme = Meme & {
+  source: "giphy" | "imgflip" | "tenor" | "reddit";
+  media: MemeMedia;
+};
 
 export function isOriginal(m: Meme): m is OriginalMeme {
   return m.source === "original" && !!m.spec;
