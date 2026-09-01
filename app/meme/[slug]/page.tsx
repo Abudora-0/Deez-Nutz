@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MemeDetail } from "@/components/meme/MemeDetail";
-import { getMeme, MEMES } from "@/lib/memes";
+import { MEMES } from "@/lib/memes";
+import { resolveMeme } from "@/lib/gallery";
+
+export const dynamicParams = true;
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return MEMES.map((m) => ({ slug: m.slug }));
@@ -14,7 +18,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const meme = getMeme(slug);
+  const meme = await resolveMeme(slug);
   if (!meme) return { title: "Not found" };
   return {
     title: meme.title,
@@ -35,7 +39,7 @@ export default async function MemePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const meme = getMeme(slug);
+  const meme = await resolveMeme(slug);
   if (!meme) notFound();
 
   return (

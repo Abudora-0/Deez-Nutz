@@ -38,13 +38,20 @@ a component library. Hard shadows, chunky borders, oversized type, halftone text
 a CRT wash, and every control tuned to match: the scrollbar, the counters, the
 dropdowns, the toggles, and the cursor.
 
-Every meme is **original art**. There is no scraping, no reposting, and no third
-party API. A small hand written SVG engine turns a compact spec into a finished
-1200 by 1200 image, animated when the spec asks for it. Downloads are rasterized to
-PNG in the browser, or handed to you as an animated SVG.
+The gallery blends three sources:
+
+- **Originals.** Hand written art from a compact spec. `lib/art.ts` turns each entry
+  in `data/memes.json` into a finished 1200 by 1200 SVG, animated when the spec asks
+  for it. Downloads rasterize to PNG in the browser or hand you the animated SVG.
+- **Templates.** The top blank templates from imgflip, captioned right in the browser
+  on a canvas. No account, no watermark, no server round trip.
+- **Trending.** Live GIFs from Giphy when a `GIPHY_API_KEY` is set. Optional, and the
+  site runs fine without it.
 
 ## Features
 
+- **Caption studio.** Open any template, type your lines, watch the canvas update,
+  and download the finished meme.
 - **Animated logo.** A peanut that cracks open on load and on hover, with a kinetic
   wordmark.
 - **Themed controls.** Custom scrollbar, a scroll progress bar, rolling odometer
@@ -80,6 +87,7 @@ PNG in the browser, or handed to you as an animated SVG.
 | Primitives  | Radix UI (select, switch, context menu), cmdk       |
 | Packaging   | JSZip for download packs                            |
 | Art         | A dependency free SVG renderer in `lib/art.ts`      |
+| Content     | imgflip templates (no key), Giphy trending (optional key) |
 | Fonts       | Archivo Black, Space Grotesk, JetBrains Mono, self hosted |
 | Hosting     | Vercel, zero config                                 |
 
@@ -102,7 +110,17 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-There are no environment variables. The whole site runs on local data.
+### Environment
+
+One optional variable. Copy `.env.example` to `.env.local` and fill it in if you want
+the live Giphy trending section:
+
+```
+GIPHY_API_KEY=your_free_key_from_developers.giphy.com
+```
+
+Without it the site runs on the originals and the imgflip templates. On Vercel, add
+the same key under Project Settings, Environment Variables.
 
 ### Scripts
 
@@ -131,13 +149,17 @@ components/
   meme/                   card, art, detail, modal, download button
   ui/                     select, switch, odometer, command palette, confetti
   providers/              app state context
+  meme/CaptionStudio.tsx  canvas caption editor for templates
 lib/
   art.ts                  the SVG meme renderer, single source of truth
   memes.ts  types.ts      catalog and query helpers
-  download.ts             png, svg, clipboard, zip
+  gallery.ts              merges originals, templates, and trending
+  sources/                giphy.ts and imgflip.ts fetchers
+  download.ts             png, svg, clipboard, zip, remote proxy
   favorites.ts  stats.ts  local storage stores
+app/api/download/         allowlisted proxy that forces remote downloads
 data/
-  memes.json              the catalog
+  memes.json              the originals catalog
 ```
 
 ## Adding a meme
@@ -189,11 +211,11 @@ Issues and pull requests are welcome. Keep the house rules:
 
 ## Disclaimer
 
-All art on this site is original work by the project and its contributors, released
-under the MIT license. The names of well known meme formats are used as cultural
-shorthand only. Nothing here is scraped, mirrored, or reposted from another source.
-If you believe something infringes your rights, open an issue and it will be handled
-quickly.
+The **original** art is the project's own work, released under the MIT license.
+**Templates** are served from imgflip and **trending GIFs** from Giphy through their
+public APIs, each credited in the UI and in every download. This project does not
+host, mirror, or claim ownership of that third party content. If you believe
+something infringes your rights, open an issue and it will be handled quickly.
 
 ## License
 

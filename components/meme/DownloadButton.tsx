@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Meme } from "@/lib/types";
-import { downloadPng, downloadSvg, copyPngToClipboard } from "@/lib/download";
+import { isOriginal } from "@/lib/types";
+import { downloadMeme, downloadSvg, copyImageToClipboard } from "@/lib/download";
 import { useAppState } from "@/components/providers/AppState";
 import { Confetti } from "@/components/ui/Confetti";
 
@@ -19,6 +20,7 @@ export function DownloadButton({ meme, size = "sm", onDone }: Props) {
   const [fire, setFire] = useState(0);
   const [busy, setBusy] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
+  const original = isOriginal(meme);
 
   useEffect(() => {
     if (!open) return;
@@ -35,16 +37,17 @@ export function DownloadButton({ meme, size = "sm", onDone }: Props) {
   }, [open]);
 
   const pad = size === "lg" ? "px-5 py-3 text-sm" : "px-3 py-2 text-xs";
+  const label = meme.source === "imgflip" ? "Download blank" : "Download";
 
-  const grabPng = async () => {
+  const grab = async () => {
     setBusy(true);
     try {
-      await downloadPng(meme);
+      await downloadMeme(meme);
       setFire((f) => f + 1);
-      pushToast(`snagged ${meme.slug}.png`);
+      pushToast("snagged it");
       onDone?.();
     } catch {
-      pushToast("rasterize failed, try the svg");
+      pushToast("download failed, try again");
     } finally {
       setBusy(false);
       setOpen(false);
@@ -60,8 +63,8 @@ export function DownloadButton({ meme, size = "sm", onDone }: Props) {
   };
 
   const copyImg = async () => {
-    const ok = await copyPngToClipboard(meme);
-    pushToast(ok ? "image copied to clipboard" : "clipboard blocked by browser");
+    const ok = await copyImageToClipboard(meme);
+    pushToast(ok ? "image copied to clipboard" : "cannot copy this one");
     setOpen(false);
   };
 
@@ -75,15 +78,22 @@ export function DownloadButton({ meme, size = "sm", onDone }: Props) {
     setOpen(false);
   };
 
+  const menu: [string, () => void][] = [
+    [label, grab],
+    ...(original ? ([["Download SVG", grabSvg]] as [string, () => void][]) : []),
+    ["Copy image", copyImg],
+    ["Copy share link", copyLink],
+  ];
+
   return (
     <div ref={wrap} className="relative inline-flex">
       <Confetti fire={fire} />
       <button
-        onClick={grabPng}
+        onClick={grab}
         disabled={busy}
         className={`brutal-border bg-acid font-mono font-bold uppercase tracking-widest text-bg transition-transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 ${pad}`}
       >
-        {busy ? "grabbing..." : "Download"}
+        {busy ? "grabbing..." : label}
       </button>
       <button
         aria-label="more download options"
@@ -104,18 +114,13 @@ export function DownloadButton({ meme, size = "sm", onDone }: Props) {
             transition={{ duration: 0.14 }}
             className="absolute right-0 top-[calc(100%+8px)] z-40 w-48 brutal-border bg-surface shadow-[6px_6px_0_0_var(--line)]"
           >
-            {[
-              ["Download PNG", grabPng],
-              ["Download SVG", grabSvg],
-              ["Copy image", copyImg],
-              ["Copy share link", copyLink],
-            ].map(([label, fn]) => (
+            {menu.map(([itemLabel, fn]) => (
               <button
-                key={label as string}
-                onClick={fn as () => void}
+                key={itemLabel}
+                onClick={fn}
                 className="block w-full px-3 py-2 text-left font-mono text-xs font-bold uppercase tracking-widest text-fg hover:bg-acid hover:text-bg"
               >
-                {label as string}
+                {itemLabel}
               </button>
             ))}
           </motion.div>

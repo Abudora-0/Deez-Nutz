@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
-import { getMeme } from "@/lib/memes";
+import { isOriginal } from "@/lib/types";
 import { memeSvg } from "@/lib/art";
 import { SITE_HOST } from "@/lib/site";
+import { resolveMeme } from "@/lib/gallery";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -9,7 +10,7 @@ export const alt = "Deez Nutz meme";
 
 export default async function OgImage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const meme = getMeme(slug);
+  const meme = await resolveMeme(slug);
 
   if (!meme) {
     return new ImageResponse(
@@ -34,9 +35,11 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
     );
   }
 
-  const dataUri = `data:image/svg+xml;base64,${Buffer.from(
-    memeSvg(meme, { animated: false, mark: true }),
-  ).toString("base64")}`;
+  const artSrc = isOriginal(meme)
+    ? `data:image/svg+xml;base64,${Buffer.from(
+        memeSvg(meme, { animated: false, mark: true }),
+      ).toString("base64")}`
+    : (meme.media?.still ?? meme.media?.url ?? "");
 
   return new ImageResponse(
     (
@@ -52,7 +55,13 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- rendered by Satori, not the browser */}
-        <img src={dataUri} width={582} height={582} alt="" />
+        <img
+          src={artSrc}
+          width={582}
+          height={582}
+          alt=""
+          style={{ objectFit: "contain", background: "#1b1714" }}
+        />
         <div style={{ display: "flex", flexDirection: "column", flex: 1, color: "#f5eddd" }}>
           <div style={{ fontSize: 26, letterSpacing: 4, color: "#c6ff3d", textTransform: "uppercase" }}>
             Deez Nutz
