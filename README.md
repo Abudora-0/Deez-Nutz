@@ -45,12 +45,12 @@ The gallery blends four sources across four tabs (Originals, Templates, GIFs, Fr
   for it. Downloads rasterize to PNG in the browser or hand you the animated SVG.
 - **Templates.** The top blank templates from imgflip, captioned right in the browser
   on a canvas. No account, no watermark, no server round trip.
-- **GIFs.** Live trending GIFs from Giphy.
-- **Fresh.** Top image posts of the day from an allowlist of meme subreddits, SFW only,
-  each credited back to its thread.
+- **GIFs.** Live trending GIFs from Giphy, when a free key is set.
+- **Fresh.** Image posts from an allowlist of meme subreddits, SFW only, each credited
+  back to its thread. No key needed.
 
-Every network source is optional and fails soft. Set none of the keys and the site
-still runs on the originals and the templates.
+Every network source fails soft. Skip the one optional key and the site still runs on
+the originals, the templates, and Fresh.
 
 ## Features
 
@@ -91,7 +91,7 @@ still runs on the originals and the templates.
 | Primitives  | Radix UI (select, switch, context menu), cmdk       |
 | Packaging   | JSZip for download packs                            |
 | Art         | A dependency free SVG renderer in `lib/art.ts`      |
-| Content     | imgflip (no key), Giphy, Reddit (optional keys)           |
+| Content     | imgflip and Reddit (no key), Giphy (optional key)         |
 | Fonts       | Archivo Black, Space Grotesk, JetBrains Mono, self hosted |
 | Hosting     | Vercel, zero config                                 |
 
@@ -116,15 +116,16 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Environment
 
-All optional. Copy `.env.example` to `.env.local` and fill in whichever live sections
-you want. On Vercel, add the same values under Project Settings, Environment Variables.
+One optional variable. Copy `.env.example` to `.env.local` if you want the live GIFs
+tab. On Vercel, add the same value under Project Settings, Environment Variables.
 
-| Variable | Unlocks | Where to get it |
-| --- | --- | --- |
-| `GIPHY_API_KEY` | the GIFs tab | [developers.giphy.com](https://developers.giphy.com) |
-| `REDDIT_CLIENT_ID` and `REDDIT_CLIENT_SECRET` | the Fresh tab | a "script" app at [reddit.com/prefs/apps](https://www.reddit.com/prefs/apps) |
+```
+GIPHY_API_KEY=your_free_key_from_developers.giphy.com
+```
 
-With none of them set the site runs on the originals and the imgflip templates.
+Everything else needs no key: the originals and imgflip templates are always on, and
+the Fresh tab pulls from [meme-api.com](https://github.com/D3vd/Meme_Api), a free
+public proxy over an allowlist of meme subreddits. No registration required.
 
 ### Scripts
 

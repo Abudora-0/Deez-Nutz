@@ -33,7 +33,9 @@ export function MemeDetail({ meme, variant = "page" }: Props) {
       : "still image"
     : isTemplate
       ? "caption template"
-      : "gif via giphy";
+      : meme.source === "reddit"
+        ? `${meme.type === "gif" ? "gif" : "image"} from reddit`
+        : `${meme.type === "gif" ? "gif" : "image"} via giphy`;
 
   return (
     <div className="flex flex-col gap-6">
