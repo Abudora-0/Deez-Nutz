@@ -15,8 +15,6 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "media4.giphy.com" },
       { protocol: "https", hostname: "i.giphy.com" },
       { protocol: "https", hostname: "i.imgflip.com" },
-      { protocol: "https", hostname: "media.tenor.com" },
-      { protocol: "https", hostname: "c.tenor.com" },
       { protocol: "https", hostname: "i.redd.it" },
       { protocol: "https", hostname: "preview.redd.it" },
       { protocol: "https", hostname: "external-preview.redd.it" },

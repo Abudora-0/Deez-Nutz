@@ -38,15 +38,14 @@ a component library. Hard shadows, chunky borders, oversized type, halftone text
 a CRT wash, and every control tuned to match: the scrollbar, the counters, the
 dropdowns, the toggles, and the cursor.
 
-The gallery blends five sources, grouped into four tabs (Originals, Templates, GIFs,
-Fresh):
+The gallery blends four sources across four tabs (Originals, Templates, GIFs, Fresh):
 
 - **Originals.** Hand written art from a compact spec. `lib/art.ts` turns each entry
   in `data/memes.json` into a finished 1200 by 1200 SVG, animated when the spec asks
   for it. Downloads rasterize to PNG in the browser or hand you the animated SVG.
 - **Templates.** The top blank templates from imgflip, captioned right in the browser
   on a canvas. No account, no watermark, no server round trip.
-- **GIFs.** Live trending GIFs from Giphy and Tenor.
+- **GIFs.** Live trending GIFs from Giphy.
 - **Fresh.** Top image posts of the day from an allowlist of meme subreddits, SFW only,
   each credited back to its thread.
 
@@ -92,7 +91,7 @@ still runs on the originals and the templates.
 | Primitives  | Radix UI (select, switch, context menu), cmdk       |
 | Packaging   | JSZip for download packs                            |
 | Art         | A dependency free SVG renderer in `lib/art.ts`      |
-| Content     | imgflip (no key), Giphy, Tenor, Reddit (optional keys)    |
+| Content     | imgflip (no key), Giphy, Reddit (optional keys)           |
 | Fonts       | Archivo Black, Space Grotesk, JetBrains Mono, self hosted |
 | Hosting     | Vercel, zero config                                 |
 
@@ -122,8 +121,7 @@ you want. On Vercel, add the same values under Project Settings, Environment Var
 
 | Variable | Unlocks | Where to get it |
 | --- | --- | --- |
-| `GIPHY_API_KEY` | Giphy GIFs | [developers.giphy.com](https://developers.giphy.com) |
-| `TENOR_API_KEY` | Tenor GIFs | Google Cloud project with the Tenor API enabled |
+| `GIPHY_API_KEY` | the GIFs tab | [developers.giphy.com](https://developers.giphy.com) |
 | `REDDIT_CLIENT_ID` and `REDDIT_CLIENT_SECRET` | the Fresh tab | a "script" app at [reddit.com/prefs/apps](https://www.reddit.com/prefs/apps) |
 
 With none of them set the site runs on the originals and the imgflip templates.
@@ -160,7 +158,7 @@ lib/
   art.ts                  the SVG meme renderer, single source of truth
   memes.ts  types.ts      catalog and query helpers
   gallery.ts              merges every source, resolves a slug to a meme
-  sources/                giphy, imgflip, tenor, reddit fetchers
+  sources/                giphy, imgflip, reddit fetchers
   download.ts             png, svg, clipboard, zip, remote proxy
   favorites.ts  stats.ts  local storage stores
 app/api/download/         allowlisted proxy that forces remote downloads
@@ -219,10 +217,10 @@ Issues and pull requests are welcome. Keep the house rules:
 
 The **original** art is the project's own work, released under the MIT license.
 Everything else is fetched live through public APIs and credited in the UI and in
-every download: templates from **imgflip**, GIFs from **Giphy** and **Tenor**, and
-image posts from **Reddit** (SFW only, linked back to each thread). This project does
-not host, mirror, or claim ownership of that third party content. If you believe
-something infringes your rights, open an issue and it will be handled quickly.
+every download: templates from **imgflip**, GIFs from **Giphy**, and image posts from
+**Reddit** (SFW only, linked back to each thread). This project does not host, mirror,
+or claim ownership of that third party content. If you believe something infringes your
+rights, open an issue and it will be handled quickly.
 
 ## License
 

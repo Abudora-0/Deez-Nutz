@@ -9,7 +9,6 @@ import type { NextRequest } from "next/server";
 const ALLOWED = [
   /^([a-z0-9-]+\.)?giphy\.com$/i,
   /^i\.imgflip\.com$/i,
-  /^([a-z0-9-]+\.)?tenor\.com$/i,
   /^([a-z0-9-]+\.)?redd\.it$/i,
   /^i\.imgur\.com$/i,
 ];

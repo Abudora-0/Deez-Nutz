@@ -22,17 +22,15 @@ export default async function HomePage() {
   const motd = memeOfTheDay();
   const { items, counts, enabled } = await loadGallery();
 
-  const gifs = counts.trending + counts.tenor;
   const parts = [
     `${counts.originals} originals`,
     counts.templates > 0 && `${counts.templates} templates`,
     counts.fresh > 0 && `${counts.fresh} fresh`,
-    gifs > 0 && `${gifs} gifs`,
+    counts.gifs > 0 && `${counts.gifs} gifs`,
   ].filter(Boolean);
 
   const marks = [
     enabled.giphy && "GIPHY",
-    enabled.tenor && "Tenor",
     enabled.reddit && "Reddit",
   ].filter(Boolean);
 
