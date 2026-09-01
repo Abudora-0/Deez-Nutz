@@ -20,7 +20,21 @@ const TICKER = [
 
 export default async function HomePage() {
   const motd = memeOfTheDay();
-  const { items, counts, giphyEnabled } = await loadGallery();
+  const { items, counts, enabled } = await loadGallery();
+
+  const gifs = counts.trending + counts.tenor;
+  const parts = [
+    `${counts.originals} originals`,
+    counts.templates > 0 && `${counts.templates} templates`,
+    counts.fresh > 0 && `${counts.fresh} fresh`,
+    gifs > 0 && `${gifs} gifs`,
+  ].filter(Boolean);
+
+  const marks = [
+    enabled.giphy && "GIPHY",
+    enabled.tenor && "Tenor",
+    enabled.reddit && "Reddit",
+  ].filter(Boolean);
 
   return (
     <div className="flex flex-col gap-10">
@@ -33,10 +47,8 @@ export default async function HomePage() {
       </Suspense>
 
       <p className="text-center font-mono text-[11px] uppercase tracking-widest text-fg-dim">
-        {counts.originals} originals
-        {counts.templates > 0 && ` + ${counts.templates} templates`}
-        {counts.trending > 0 && ` + ${counts.trending} trending`}
-        {giphyEnabled ? " · powered by GIPHY" : ""}
+        {parts.join(" + ")}
+        {marks.length > 0 && ` · powered by ${marks.join(", ")}`}
       </p>
     </div>
   );

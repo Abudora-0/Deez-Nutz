@@ -38,15 +38,20 @@ a component library. Hard shadows, chunky borders, oversized type, halftone text
 a CRT wash, and every control tuned to match: the scrollbar, the counters, the
 dropdowns, the toggles, and the cursor.
 
-The gallery blends three sources:
+The gallery blends five sources, grouped into four tabs (Originals, Templates, GIFs,
+Fresh):
 
 - **Originals.** Hand written art from a compact spec. `lib/art.ts` turns each entry
   in `data/memes.json` into a finished 1200 by 1200 SVG, animated when the spec asks
   for it. Downloads rasterize to PNG in the browser or hand you the animated SVG.
 - **Templates.** The top blank templates from imgflip, captioned right in the browser
   on a canvas. No account, no watermark, no server round trip.
-- **Trending.** Live GIFs from Giphy when a `GIPHY_API_KEY` is set. Optional, and the
-  site runs fine without it.
+- **GIFs.** Live trending GIFs from Giphy and Tenor.
+- **Fresh.** Top image posts of the day from an allowlist of meme subreddits, SFW only,
+  each credited back to its thread.
+
+Every network source is optional and fails soft. Set none of the keys and the site
+still runs on the originals and the templates.
 
 ## Features
 
@@ -87,7 +92,7 @@ The gallery blends three sources:
 | Primitives  | Radix UI (select, switch, context menu), cmdk       |
 | Packaging   | JSZip for download packs                            |
 | Art         | A dependency free SVG renderer in `lib/art.ts`      |
-| Content     | imgflip templates (no key), Giphy trending (optional key) |
+| Content     | imgflip (no key), Giphy, Tenor, Reddit (optional keys)    |
 | Fonts       | Archivo Black, Space Grotesk, JetBrains Mono, self hosted |
 | Hosting     | Vercel, zero config                                 |
 
@@ -112,15 +117,16 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Environment
 
-One optional variable. Copy `.env.example` to `.env.local` and fill it in if you want
-the live Giphy trending section:
+All optional. Copy `.env.example` to `.env.local` and fill in whichever live sections
+you want. On Vercel, add the same values under Project Settings, Environment Variables.
 
-```
-GIPHY_API_KEY=your_free_key_from_developers.giphy.com
-```
+| Variable | Unlocks | Where to get it |
+| --- | --- | --- |
+| `GIPHY_API_KEY` | Giphy GIFs | [developers.giphy.com](https://developers.giphy.com) |
+| `TENOR_API_KEY` | Tenor GIFs | Google Cloud project with the Tenor API enabled |
+| `REDDIT_CLIENT_ID` and `REDDIT_CLIENT_SECRET` | the Fresh tab | a "script" app at [reddit.com/prefs/apps](https://www.reddit.com/prefs/apps) |
 
-Without it the site runs on the originals and the imgflip templates. On Vercel, add
-the same key under Project Settings, Environment Variables.
+With none of them set the site runs on the originals and the imgflip templates.
 
 ### Scripts
 
@@ -153,8 +159,8 @@ components/
 lib/
   art.ts                  the SVG meme renderer, single source of truth
   memes.ts  types.ts      catalog and query helpers
-  gallery.ts              merges originals, templates, and trending
-  sources/                giphy.ts and imgflip.ts fetchers
+  gallery.ts              merges every source, resolves a slug to a meme
+  sources/                giphy, imgflip, tenor, reddit fetchers
   download.ts             png, svg, clipboard, zip, remote proxy
   favorites.ts  stats.ts  local storage stores
 app/api/download/         allowlisted proxy that forces remote downloads
@@ -212,9 +218,10 @@ Issues and pull requests are welcome. Keep the house rules:
 ## Disclaimer
 
 The **original** art is the project's own work, released under the MIT license.
-**Templates** are served from imgflip and **trending GIFs** from Giphy through their
-public APIs, each credited in the UI and in every download. This project does not
-host, mirror, or claim ownership of that third party content. If you believe
+Everything else is fetched live through public APIs and credited in the UI and in
+every download: templates from **imgflip**, GIFs from **Giphy** and **Tenor**, and
+image posts from **Reddit** (SFW only, linked back to each thread). This project does
+not host, mirror, or claim ownership of that third party content. If you believe
 something infringes your rights, open an issue and it will be handled quickly.
 
 ## License
