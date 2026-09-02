@@ -8,8 +8,8 @@ export function SiteFooter() {
         <div>
           <AnimatedLogo className="text-2xl" href={null} />
           <p className="mt-3 max-w-sm text-sm text-fg-dim">
-            An arcade for the internet&apos;s finest nonsense. Every meme here is original art,
-            rendered on the fly, free to download and free to post.
+            An arcade for the internet&apos;s finest nonsense. Search it, caption it,
+            grab it. No login, no watermarks, no tracking.
           </p>
         </div>
 
@@ -33,7 +33,7 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t-[3px] border-line px-4 py-4 text-center font-mono text-[11px] uppercase tracking-widest text-fg-dim">
-        Deez Nutz &copy; {new Date().getFullYear()} &middot; built with next.js and questionable judgement &middot; zero em dashes on board
+        Deez Nutz &copy; {new Date().getFullYear()} &middot; built with next.js and questionable judgement
       </div>
     </footer>
   );
