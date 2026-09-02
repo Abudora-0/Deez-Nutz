@@ -84,26 +84,28 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <nav className="scroll-strip items-center gap-1 border-t-[3px] border-line px-4 py-2 md:hidden">
-        {NAV.map((item) => {
-          const active = pathname === item.href;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              scroll={false}
-              className={`shrink-0 whitespace-nowrap px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest ${
-                active ? "bg-acid text-bg" : "text-fg"
-              }`}
-            >
-              {item.label}
-              {item.href === "/favorites" && count > 0 && (
-                <span className="ml-1 text-hot">{count}</span>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
+      <div className="md:hidden">
+        <nav className="scroll-strip items-center gap-1 border-t-[3px] border-line px-4 py-2">
+          {NAV.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                scroll={false}
+                className={`shrink-0 whitespace-nowrap px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest ${
+                  active ? "bg-acid text-bg" : "text-fg"
+                }`}
+              >
+                {item.label}
+                {item.href === "/favorites" && count > 0 && (
+                  <span className="ml-1 text-hot">{count}</span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
     </header>
   );
 }
