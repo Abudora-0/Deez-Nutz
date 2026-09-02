@@ -20,11 +20,28 @@ export interface CaptionSource {
   creditUrl?: string;
 }
 
-function boxAnchors(count: number): number[] {
-  if (count <= 1) return [0.5];
-  if (count === 2) return [0.12, 0.88];
-  if (count === 3) return [0.1, 0.5, 0.9];
-  return [0.1, 0.37, 0.63, 0.9];
+type Layout = "stack" | "split" | "center";
+
+interface Anchor {
+  x: number; // fraction of width
+  y: number; // fraction of height
+  maxW: number; // fraction of width for wrapping
+}
+
+function boxAnchors(count: number, layout: Layout): Anchor[] {
+  if (count === 2 && layout === "split") {
+    return [
+      { x: 0.27, y: 0.5, maxW: 0.46 },
+      { x: 0.73, y: 0.5, maxW: 0.46 },
+    ];
+  }
+  if (layout === "center") {
+    const ys = count <= 1 ? [0.5] : count === 2 ? [0.4, 0.6] : count === 3 ? [0.32, 0.5, 0.68] : [0.28, 0.43, 0.57, 0.72];
+    return ys.map((y) => ({ x: 0.5, y, maxW: 0.9 }));
+  }
+  // stack
+  const ys = count <= 1 ? [0.5] : count === 2 ? [0.12, 0.88] : count === 3 ? [0.1, 0.5, 0.9] : [0.1, 0.37, 0.63, 0.9];
+  return ys.map((y) => ({ x: 0.5, y, maxW: 0.92 }));
 }
 
 function drawWrapped(
@@ -73,6 +90,7 @@ export function CaptionStudio({ source }: { source: CaptionSource }) {
   const ready = readyUrl === source.url;
   const boxes = Math.min(Math.max(source.boxCount ?? 2, 1), 4);
   const [captions, setCaptions] = useState<string[]>(() => Array.from({ length: boxes }, () => ""));
+  const [layout, setLayout] = useState<Layout>("stack");
 
   const render = useCallback(() => {
     const canvas = canvasRef.current;
@@ -86,13 +104,13 @@ export function CaptionStudio({ source }: { source: CaptionSource }) {
     if (!ctx) return;
     ctx.drawImage(img, 0, 0, w, h);
 
-    const anchors = boxAnchors(captions.length);
-    const fontSize = Math.round(h / 10);
+    const anchors = boxAnchors(captions.length, layout);
+    const fontSize = Math.round(Math.min(h, w) / (layout === "split" ? 11 : 10));
     captions.forEach((text, i) => {
-      if (!text.trim()) return;
-      drawWrapped(ctx, text, w / 2, anchors[i] * h, w * 0.92, fontSize);
+      if (!text.trim() || !anchors[i]) return;
+      drawWrapped(ctx, text, anchors[i].x * w, anchors[i].y * h, anchors[i].maxW * w, fontSize);
     });
-  }, [captions, source.width, source.height]);
+  }, [captions, layout, source.width, source.height]);
 
   useEffect(() => {
     const img = new Image();
@@ -142,16 +160,38 @@ export function CaptionStudio({ source }: { source: CaptionSource }) {
 
       <div className="flex flex-col gap-3">
         <p className="font-mono text-xs font-bold uppercase tracking-widest text-fg-dim">caption it</p>
+
+        {captions.length === 2 && (
+          <div className="flex gap-1" role="group" aria-label="text layout">
+            {(["stack", "split", "center"] as const).map((l) => (
+              <button
+                key={l}
+                onClick={() => setLayout(l)}
+                aria-pressed={layout === l}
+                className={`flex-1 brutal-border px-2 py-1.5 font-mono text-[10px] font-bold uppercase tracking-widest transition-transform hover:-translate-y-0.5 ${
+                  layout === l ? "bg-acid text-bg" : "bg-bg text-fg"
+                }`}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
+        )}
+
         {captions.map((value, i) => (
           <label key={i} className="flex flex-col gap-1">
             <span className="font-mono text-[10px] uppercase tracking-widest text-fg-dim">
               {captions.length === 1
                 ? "text"
-                : i === 0
-                  ? "top text"
-                  : i === captions.length - 1
-                    ? "bottom text"
-                    : `text ${i + 1}`}
+                : captions.length === 2 && layout === "split"
+                  ? i === 0
+                    ? "left text"
+                    : "right text"
+                  : i === 0
+                    ? "top text"
+                    : i === captions.length - 1
+                      ? "bottom text"
+                      : `text ${i + 1}`}
             </span>
             <input
               value={value}

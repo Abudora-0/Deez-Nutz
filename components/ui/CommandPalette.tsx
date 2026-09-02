@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Command } from "cmdk";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { useAppState } from "@/components/providers/AppState";
 
 const GROUP_HEADING =
@@ -27,6 +27,11 @@ export function CommandPalette() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (commandOpen && e.key === "Escape") {
+        e.preventDefault();
+        setCommandOpen(false);
+        return;
+      }
       const inField =
         e.target instanceof HTMLElement &&
         (e.target.matches("input, textarea, select") || e.target.isContentEditable);
@@ -58,20 +63,18 @@ export function CommandPalette() {
     close();
   };
 
+  if (!commandOpen) return null;
+
   return (
-    <AnimatePresence>
-      {commandOpen && (
-        <motion.div
-          className="fixed inset-0 z-[95] flex items-start justify-center bg-bg/70 p-4 pt-[12vh] backdrop-blur-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={close}
-        >
-          <motion.div
+    <motion.div
+      className="fixed inset-0 z-[95] flex items-start justify-center bg-bg/70 p-4 pt-[12vh] backdrop-blur-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      onClick={close}
+    >
+      <motion.div
             initial={{ y: -24, scale: 0.97, opacity: 0 }}
             animate={{ y: 0, scale: 1, opacity: 1 }}
-            exit={{ y: -16, scale: 0.98, opacity: 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 24 }}
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-xl brutal-border bg-bg shadow-[12px_12px_0_0_var(--acid)]"
@@ -142,10 +145,8 @@ export function CommandPalette() {
                 </Command.Group>
               </Command.List>
             </Command>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+      </motion.div>
+    </motion.div>
   );
 }
 

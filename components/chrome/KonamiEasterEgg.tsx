@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { useAppState } from "@/components/providers/AppState";
 
 const CODE = [
@@ -39,15 +39,16 @@ export function KonamiEasterEgg() {
 
   const nuts = Array.from({ length: 44 });
 
+  if (!rain) return null;
+
   return (
-    <AnimatePresence>
-      {rain && (
-        <motion.div
-          className="pointer-events-none fixed inset-0 z-[80] overflow-hidden"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          {nuts.map((_, i) => {
+    <motion.div
+      className="pointer-events-none fixed inset-0 z-[80] overflow-hidden"
+      initial={{ opacity: 1 }}
+      animate={{ opacity: [1, 1, 0] }}
+      transition={{ duration: 5.2, times: [0, 0.85, 1] }}
+    >
+      {nuts.map((_, i) => {
             const left = (i * 37) % 100;
             const delay = (i % 11) * 0.13;
             const dur = 2.4 + ((i * 7) % 20) / 10;
@@ -62,10 +63,8 @@ export function KonamiEasterEgg() {
               >
                 🥜
               </motion.span>
-            );
-          })}
-        </motion.div>
-      )}
-    </AnimatePresence>
+        );
+      })}
+    </motion.div>
   );
 }

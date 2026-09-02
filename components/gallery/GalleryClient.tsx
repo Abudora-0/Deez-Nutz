@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import type { Meme, MemeKind, SortKey } from "@/lib/types";
 import { memeKind } from "@/lib/types";
 import { queryMemes } from "@/lib/query";
@@ -247,12 +247,10 @@ export function GalleryClient({ items }: { items: Meme[] }) {
         onSlideshow={() => visible.length && setSlideshow(0)}
       />
 
-      <AnimatePresence>
-        {selectMode && (
+      {selectMode && (
           <motion.div
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
             className="sticky top-3 z-30 flex flex-wrap items-center justify-between gap-3 brutal-border bg-hot p-3 text-bg shadow-[6px_6px_0_0_var(--line)]"
           >
             <span className="font-mono text-sm font-bold uppercase tracking-widest">
@@ -280,8 +278,7 @@ export function GalleryClient({ items }: { items: Meme[] }) {
               </button>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+      )}
 
       {searchLoading && results.length === 0 ? (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

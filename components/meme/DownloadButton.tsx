@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import type { Meme } from "@/lib/types";
 import { downloadMeme, copyImageToClipboard, copyText, shareMeme } from "@/lib/download";
 import { useAppState } from "@/components/providers/AppState";
@@ -88,27 +88,24 @@ export function DownloadButton({ meme, size = "sm", onDone }: Props) {
         ⋯
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.96 }}
-            transition={{ duration: 0.14 }}
-            className="absolute right-0 top-[calc(100%+8px)] z-40 w-52 brutal-border bg-surface shadow-[6px_6px_0_0_var(--line)]"
-          >
-            {menu.map(([label, fn]) => (
-              <button
-                key={label}
-                onClick={fn}
-                className="block w-full px-3 py-2 text-left font-mono text-xs font-bold uppercase tracking-widest text-fg hover:bg-acid hover:text-bg"
-              >
-                {label}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0, y: -8, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.14 }}
+          className="absolute right-0 top-[calc(100%+8px)] z-40 w-52 brutal-border bg-surface shadow-[6px_6px_0_0_var(--line)]"
+        >
+          {menu.map(([label, fn]) => (
+            <button
+              key={label}
+              onClick={fn}
+              className="block w-full px-3 py-2 text-left font-mono text-xs font-bold uppercase tracking-widest text-fg hover:bg-acid hover:text-bg"
+            >
+              {label}
+            </button>
+          ))}
+        </motion.div>
+      )}
     </div>
   );
 }
