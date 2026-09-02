@@ -1,11 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 180" width="760" height="180" font-family="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif">
-  <rect width="760" height="180" fill="#12100f"/>
-  <g transform="translate(90 90)">
-    <path d="M0,24 L9,50 L36,50 L14,66 L22,94 L0,77 L-22,94 L-14,66 L-36,50 L-9,50 Z" transform="translate(0,-30) scale(0.9)" fill="#c6ff3d" stroke="#12100f" stroke-width="4" stroke-linejoin="round"/>
-    <path d="M-4,-64 L-12,-44 L-2,-32 L-14,-16 L-4,0 L-12,18 L-4,36 C-38,34 -50,-2 -38,-34 C-31,-54 -20,-64 -4,-64 Z" fill="#f5eddd" stroke="#12100f" stroke-width="6" stroke-linejoin="round" transform="translate(2 6)"/>
-    <path d="M4,-64 L12,-44 L2,-32 L14,-16 L4,0 L12,18 L4,36 C38,34 50,-2 38,-34 C31,-54 20,-64 4,-64 Z" fill="#f5eddd" stroke="#12100f" stroke-width="6" stroke-linejoin="round" transform="translate(6 6)"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 320" width="1100" height="320" font-family="Impact, Haettenschweiler, 'Arial Narrow Bold', Anton, sans-serif">
+  <defs>
+    <pattern id="ht" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="1.6" fill="#f5eddd" opacity="0.12"/>
+    </pattern>
+  </defs>
+
+  <rect width="1100" height="320" fill="#12100f"/>
+  <rect x="10" y="10" width="1080" height="300" fill="none" stroke="#f5eddd" stroke-width="8"/>
+  <rect x="10" y="10" width="1080" height="300" fill="url(#ht)"/>
+
+  <!-- cracked peanut mark -->
+  <g transform="translate(170 160)">
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="-6 0; 6 0; -6 0" dur="3.2s" repeatCount="indefinite" additive="sum"/>
+      <path d="M0,-96 L-16,-56 L4,-30 L-20,4 L0,36 L-16,72 L0,110 C-64,104 -84,32 -60,-30 C-46,-70 -30,-96 0,-96 Z"
+            fill="#f5eddd" stroke="#12100f" stroke-width="10" stroke-linejoin="round"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="6 0; -6 0; 6 0" dur="3.2s" repeatCount="indefinite" additive="sum"/>
+      <path d="M0,-96 L16,-56 L-4,-30 L20,4 L0,36 L16,72 L0,110 C64,104 84,32 60,-30 C46,-70 30,-96 0,-96 Z"
+            fill="#f5eddd" stroke="#12100f" stroke-width="10" stroke-linejoin="round"/>
+    </g>
+    <path d="M0,-40 L-20,10 L-4,10 L-16,58 L18,-4 L2,-4 Z" fill="#c6ff3d" stroke="#12100f" stroke-width="5" stroke-linejoin="round">
+      <animate attributeName="opacity" values="0.55;1;0.55" dur="1.6s" repeatCount="indefinite"/>
+    </path>
   </g>
-  <text x="170" y="118" font-size="96" fill="#f5eddd" letter-spacing="2">DEEZ</text>
-  <text x="450" y="118" font-size="96" fill="#c6ff3d" letter-spacing="2">NUTZ</text>
-  <text x="172" y="150" font-family="'JetBrains Mono', monospace" font-size="15" fill="#b9ae98" letter-spacing="6">MEME AND GIF ARCADE</text>
+
+  <!-- wordmark -->
+  <text x="300" y="175" font-size="150" fill="#f5eddd" letter-spacing="2">DEEZ</text>
+  <text x="640" y="175" font-size="150" fill="#c6ff3d" letter-spacing="2">NUTZ</text>
+  <text x="304" y="228" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="22" fill="#b9ae98" letter-spacing="8">
+    SEARCH IT. CAPTION IT. GRAB IT.
+  </text>
+  <rect x="304" y="252" width="470" height="10" fill="#ff2e88"/>
 </svg>

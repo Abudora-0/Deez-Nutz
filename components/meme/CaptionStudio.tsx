@@ -135,9 +135,9 @@ export function CaptionStudio({ source }: { source: CaptionSource }) {
   };
 
   return (
-    <div className="grid gap-6 md:grid-cols-[1fr_18rem]">
-      <div className="brutal-border brutal-shadow bg-bg-2">
-        <canvas ref={canvasRef} className="h-auto w-full" />
+    <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_18rem]">
+      <div className="mx-auto w-full max-w-[32rem] brutal-border brutal-shadow bg-bg-2">
+        <canvas ref={canvasRef} className="block h-auto w-full" />
       </div>
 
       <div className="flex flex-col gap-3">

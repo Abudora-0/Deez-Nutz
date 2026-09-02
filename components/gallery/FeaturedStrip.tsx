@@ -3,9 +3,11 @@
 import Link from "next/link";
 import type { Meme } from "@/lib/types";
 import { MemeArt } from "@/components/meme/MemeArt";
+import { useAppState } from "@/components/providers/AppState";
 
 export function FeaturedStrip({ items }: { items: Meme[] }) {
-  if (!items.length) return null;
+  const { query } = useAppState();
+  if (!items.length || query.trim().length >= 2) return null;
   return (
     <section aria-label="Featured today">
       <div className="mb-3 flex items-center gap-3">
@@ -16,14 +18,14 @@ export function FeaturedStrip({ items }: { items: Meme[] }) {
           rotates at midnight utc
         </span>
       </div>
-      <div className="scroll-strip gap-4 pb-2 md:grid md:grid-cols-5 md:gap-4">
-        {items.map((meme) => (
+      <div className="grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4">
+        {items.slice(0, 5).map((meme) => (
           <Link
             key={meme.id}
             href={`/meme/${meme.slug}`}
             scroll={false}
             aria-label={`Open ${meme.title}`}
-            className="group w-40 shrink-0 brutal-border brutal-shadow-sm bg-surface transition-transform hover:-translate-y-1 md:w-auto"
+            className="group flex flex-col self-start brutal-border brutal-shadow-sm bg-surface transition-transform hover:-translate-y-1"
           >
             <MemeArt meme={meme} className="aspect-square w-full border-b-[3px] border-line" />
             <p className="truncate p-2 font-mono text-[10px] uppercase tracking-wider text-fg-dim">
