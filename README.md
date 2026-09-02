@@ -1,12 +1,11 @@
 <p align="center">
-  <img src="docs/logo.svg" alt="Deez Nutz" width="560">
+  <img src="docs/logo.svg" alt="Deez Nutz" width="620">
 </p>
 
-<h1 align="center">Deez Nutz</h1>
-
 <p align="center">
-  A neo brutalist arcade for downloading the internet's finest memes and gifs.<br>
-  Original art, rendered on the fly, free to grab.
+  A neo brutalist arcade for the internet's memes, gif templates, and fresh
+  reaction images.<br>
+  Search it, caption it, grab it. No login, no watermarks, no tracking.
 </p>
 
 <p align="center">
@@ -26,82 +25,70 @@
 
 <p align="center">
   <b>Tags:</b>
-  memes &middot; gifs &middot; meme gallery &middot; reaction images &middot; nextjs &middot; react &middot; typescript &middot; tailwindcss &middot; framer motion &middot; vercel &middot; svg &middot; download
+  memes &middot; gifs &middot; meme generator &middot; meme templates &middot; reaction images &middot; nextjs &middot; react &middot; typescript &middot; tailwindcss &middot; vercel &middot; giphy &middot; imgflip
 </p>
 
 ---
 
 ## What is this
 
-Deez Nutz is a single page meme and gif arcade with a look that does not come from
-a component library. Hard shadows, chunky borders, oversized type, halftone texture,
-a CRT wash, and every control tuned to match: the scrollbar, the counters, the
-dropdowns, the toggles, and the cursor.
+A single page meme arcade with a look that does not come from a component library:
+hard shadows, chunky borders, oversized type, a halftone and CRT wash, and every
+control tuned to match. The gallery pulls live from three sources, grouped into tabs:
 
-The gallery blends four sources across four tabs (Originals, Templates, GIFs, Fresh):
+- **Templates.** The top blank templates from imgflip. Open one and caption it right
+  in the browser on a canvas. No account, no imgflip watermark, no server round trip.
+- **GIFs.** Trending GIFs from Giphy, plus live typed search. Needs one free key.
+- **Fresh.** Top SFW image posts of the day from an allowlist of meme subreddits,
+  each credited back to its Reddit thread. No key.
 
-- **Originals.** Hand written art from a compact spec. `lib/art.ts` turns each entry
-  in `data/memes.json` into a finished 1200 by 1200 SVG, animated when the spec asks
-  for it. Downloads rasterize to PNG in the browser or hand you the animated SVG.
-- **Templates.** The top blank templates from imgflip, captioned right in the browser
-  on a canvas. No account, no watermark, no server round trip.
-- **GIFs.** Live trending GIFs from Giphy, when a free key is set.
-- **Fresh.** Image posts from an allowlist of meme subreddits, SFW only, each credited
-  back to its thread. No key needed.
-
-Every network source fails soft. Skip the one optional key and the site still runs on
-the originals, the templates, and Fresh.
-
-## Features
-
-- **Caption studio.** Open any template, type your lines, watch the canvas update,
-  and download the finished meme.
-- **Animated logo.** A peanut that cracks open on load and on hover, with a kinetic
-  wordmark.
-- **Themed controls.** Custom scrollbar, a scroll progress bar, rolling odometer
-  counters, spring loaded dropdowns, chunky toggles, a crosshair cursor, and themed
-  context menus. Five swappable accent colors, remembered per device.
-- **Command palette.** Press `K` anywhere for fuzzy search, quick navigation, and
-  one shot actions.
-- **One click download.** Grab a PNG or an animated SVG, copy the image to the
-  clipboard, or copy a share link. A confetti burst and a live counter come free.
-- **Download packs.** Flip on pack mode, select as many memes as you like, and pull
-  them all down as a single zip.
-- **Favorites.** Tap the nut on any card to build a stash, saved in local storage,
-  with its own page and a one click zip.
-- **Meme of the day.** A deterministic pick that rolls over at midnight UTC.
-- **Chaos mode.** Reshuffles and rattles the whole grid. Do not press it.
-- **Deep links and modals.** Opening a card from the grid shows a shareable modal
-  without leaving the page. The same URL loads a full page on refresh, with its own
-  Open Graph image.
-- **Keyboard first.** Arrow keys move through the grid, `D` downloads the focused
-  meme, `F` favorites it, `Esc` closes everything.
-- **Konami code.** Up up down down left right left right b a.
-- **Accessible and honest.** Reduced motion is respected everywhere, there is no
-  account, no database, and no tracking.
-
-## Tech stack
-
-| Area        | Choice                                              |
-| ----------- | --------------------------------------------------- |
-| Framework   | Next.js 16 App Router, React 19                     |
-| Language    | TypeScript, strict                                  |
-| Styling     | Tailwind CSS 4 with a custom token layer            |
-| Animation   | Motion (Framer Motion)                              |
-| Primitives  | Radix UI (select, switch, context menu), cmdk       |
-| Packaging   | JSZip for download packs                            |
-| Art         | A dependency free SVG renderer in `lib/art.ts`      |
-| Content     | imgflip and Reddit (no key), Giphy (optional key)         |
-| Fonts       | Archivo Black, Space Grotesk, JetBrains Mono, self hosted |
-| Hosting     | Vercel, zero config                                 |
+Type in the search bar and it queries Giphy and the template list live, scoped by the
+tab you are on. Every network source fails soft, so the page always renders.
 
 ## Screenshots
 
-> Drop your own captures in `docs/` and link them here.
+| Gallery | Live search | Caption studio |
+| --- | --- | --- |
+| ![gallery](docs/shot-gallery.png) | ![search](docs/shot-search.png) | ![caption](docs/shot-caption.png) |
 
-| Gallery | Meme view | Command palette |
-| ------- | --------- | --------------- |
-| `docs/screenshot-gallery.png` | `docs/screenshot-meme.png` | `docs/screenshot-command.png` |
+<p align="center"><img src="docs/shot-mobile.png" alt="mobile" width="300"></p>
+
+## Features
+
+- **Live search.** Type a word, get real Giphy and template results, scoped by the
+  Templates / GIFs tab. Quick chips for common searches.
+- **Caption anything.** Caption a blank template, any image on the site, or your own
+  upload at `/create`. Impact text on a canvas, downloaded as PNG, nothing uploaded.
+- **Slideshow.** A fullscreen roulette through the current results. Arrows to move,
+  space to auto advance, `D` to download, `Esc` to close.
+- **Download and share.** One click PNG, copy image to clipboard, copy markdown, copy
+  the direct image URL, native share, or a share link. Confetti and a live counter
+  come free.
+- **Download packs.** Flip on pack mode, pick many, pull them all as one zip.
+- **Favorites.** Tap the nut on any card to build a stash, saved on device, with its
+  own page and a one click zip.
+- **Featured today.** A deterministic daily pick, rotating at midnight UTC.
+- **Command palette.** Press `K` anywhere to search, navigate, or run an action.
+- **Themed controls.** Custom scrollbar, scroll progress bar, rolling odometer, spring
+  dropdowns, chunky toggles, an arcade crosshair pointer, five swappable accents.
+- **Deep links.** Opening a card shows a shareable modal without leaving the grid; the
+  same URL loads a full page on refresh, with its own Open Graph image.
+- **Keyboard first**, **Konami code**, reduced motion respected, no account, no
+  database, no tracking.
+
+## Tech stack
+
+| Area | Choice |
+| --- | --- |
+| Framework | Next.js 16 App Router, React 19, streamed with Suspense |
+| Language | TypeScript, strict |
+| Styling | Tailwind CSS 4 with a custom token layer |
+| Animation | Motion, plus CSS keyframes for anything above the fold |
+| Primitives | Radix UI (select, switch, context menu), cmdk |
+| Images | `next/image` for static thumbnails, plain `<img>` for gifs |
+| Content | imgflip and Reddit need no key, Giphy needs a free key |
+| Fonts | Archivo Black, Space Grotesk, JetBrains Mono, self hosted |
+| Hosting | Vercel, zero config, ISR |
 
 ## Getting started
 
@@ -116,112 +103,75 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Environment
 
-One optional variable. Copy `.env.example` to `.env.local` if you want the live GIFs
-tab. On Vercel, add the same value under Project Settings, Environment Variables.
+One optional variable. Copy `.env.example` to `.env.local` for the live GIFs tab and
+search. On Vercel, add the same value under Project Settings, Environment Variables.
 
 ```
 GIPHY_API_KEY=your_free_key_from_developers.giphy.com
 ```
 
-Everything else needs no key: the originals and imgflip templates are always on, and
-the Fresh tab pulls from [meme-api.com](https://github.com/D3vd/Meme_Api), a free
-public proxy over an allowlist of meme subreddits. No registration required.
+Templates and Fresh need no key. Fresh runs through
+[meme-api.com](https://github.com/D3vd/Meme_Api), a free public proxy over an
+allowlist of meme subreddits, no registration.
 
 ### Scripts
 
-| Command             | Does                          |
-| ------------------- | ----------------------------- |
-| `npm run dev`       | Start the dev server          |
-| `npm run build`     | Production build              |
-| `npm run start`     | Serve the production build    |
-| `npm run lint`      | ESLint                        |
-| `npm run typecheck` | TypeScript, no emit           |
+| Command | Does |
+| --- | --- |
+| `npm run dev` | Dev server |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript, no emit |
+| `node scripts/shots.mjs` | Regenerate the README screenshots (needs the prod server running) |
 
 ## Project structure
 
 ```
 app/
-  layout.tsx              root shell, fonts, providers, chrome
-  page.tsx                hero plus the gallery
-  meme/[slug]/            full meme page, generateStaticParams, OG image
+  page.tsx                hero, then <GallerySection> in a Suspense boundary
+  create/                 upload or pick a template, then caption it
+  meme/[slug]/            full meme page, prerenders the template slugs, OG image
   @modal/(.)meme/[slug]/  intercepting modal for the same route
   favorites/  about/      supporting pages
-  sitemap.ts  robots.ts   metadata routes
+  api/search/             live typed search across giphy and templates
+  api/download/           allowlisted proxy that forces cross origin downloads
 components/
-  logo/                   the animated logo
-  chrome/                 header, footer, cursor, scroll bar, ticker, konami
-  gallery/                hero, gallery client, toolbar, favorites
-  meme/                   card, art, detail, modal, download button
+  gallery/                hero, section, client, toolbar, slideshow, featured strip
+  meme/                   card, art, detail, download button, caption studio
+  chrome/                 header, footer, scroll bar, ticker, konami, toaster
   ui/                     select, switch, odometer, command palette, confetti
-  providers/              app state context
-  meme/CaptionStudio.tsx  canvas caption editor for templates
+  providers/              shared app state (query, slideshow, accents, toasts)
 lib/
-  art.ts                  the SVG meme renderer, single source of truth
-  memes.ts  types.ts      catalog and query helpers
-  gallery.ts              merges every source, resolves a slug to a meme
-  sources/                giphy, imgflip, reddit fetchers
-  download.ts             png, svg, clipboard, zip, remote proxy
+  gallery.ts              merges the sources, resolves a slug, runs search
+  sources/                giphy, imgflip, reddit fetchers, all server only
+  query.ts                tag and sort helpers, seeded shuffle
+  download.ts             download, clipboard, share, markdown, zip
   favorites.ts  stats.ts  local storage stores
-app/api/download/         allowlisted proxy that forces remote downloads
-data/
-  memes.json              the originals catalog
 ```
-
-## Adding a meme
-
-Append an entry to `data/memes.json`:
-
-```json
-{
-  "id": "unique-id",
-  "slug": "url-slug",
-  "title": "Readable Title",
-  "type": "image",
-  "tags": ["reaction", "office"],
-  "blurb": "One line of context.",
-  "spec": {
-    "template": "classic",
-    "palette": "acid",
-    "mascot": "grin",
-    "lines": ["TOP LINE", "BOTTOM LINE"],
-    "note": "small footnote"
-  }
-}
-```
-
-Templates: `classic`, `starburst`, `stamp`, `drake`, `brain`, `terminal`, `billboard`.
-Palettes: `acid`, `hot`, `volt`, `sun`, `grape`, `mono`.
-Mascot poses: `grin`, `shades`, `thumbsup`, `shrug`, `point`, `flames`, `cry`, `dead`, `smug`, `mindblown`, `none`.
-Set `"type": "gif"` to turn on animation.
 
 ## Deployment
 
-The project is a stock Next.js app, so Vercel needs no configuration.
-
-1. Push to GitHub.
-2. Import the repo at [vercel.com/new](https://vercel.com/new).
-3. Deploy.
-
-Or use the button:
+Stock Next.js, so Vercel needs no configuration. Import the repo at
+[vercel.com/new](https://vercel.com/new), optionally add `GIPHY_API_KEY`, deploy.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Abudora-0/Deez-Nutz)
 
 ## Contributing
 
-Issues and pull requests are welcome. Keep the house rules:
+Issues and pull requests welcome. House rules:
 
 - No em dashes anywhere in the code, copy, or commit messages.
-- Run `npm run lint` and `npm run build` before opening a PR.
-- New memes go in `data/memes.json`, not in new components.
+- Run `npm run lint`, `npm run typecheck`, and `npm run build` before a PR.
 
 ## Disclaimer
 
-The **original** art is the project's own work, released under the MIT license.
-Everything else is fetched live through public APIs and credited in the UI and in
-every download: templates from **imgflip**, GIFs from **Giphy**, and image posts from
-**Reddit** (SFW only, linked back to each thread). This project does not host, mirror,
-or claim ownership of that third party content. If you believe something infringes your
-rights, open an issue and it will be handled quickly.
+Everything in the gallery is fetched live through public APIs and credited in the UI
+and in every download: templates from **imgflip**, GIFs from **Giphy**, image posts
+from **Reddit** (SFW only, linked back to each thread). This project does not host,
+mirror, or claim ownership of that content. Captioned memes are generated in your
+browser and never leave it. If you believe something infringes your rights, open an
+issue and it will be handled quickly.
 
 ## License
 

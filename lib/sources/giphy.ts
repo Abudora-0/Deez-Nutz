@@ -3,7 +3,7 @@ import type { Meme } from "@/lib/types";
 
 /*
   Giphy integration. Requires GIPHY_API_KEY. Every function degrades to an empty
-  result when the key is missing so the site still runs on originals alone.
+  result when the key is missing so the rest of the site still runs.
 */
 
 const KEY = process.env.GIPHY_API_KEY;
@@ -40,7 +40,7 @@ function toMeme(g: GiphyGif): Meme | null {
     slug: `giphy-${g.id}`,
     title: title.length > 60 ? `${title.slice(0, 57)}...` : title,
     type: "gif",
-    tags: ["trending", "giphy", "gif"],
+    tags: ["giphy", "gif"],
     blurb: g.username ? `Straight from Giphy, by ${g.username}.` : "Straight from Giphy trending.",
     source: "giphy",
     media: {
@@ -66,11 +66,11 @@ async function fetchGifs(path: string): Promise<Meme[]> {
   }
 }
 
-export function getGiphyTrending(limit = 24): Promise<Meme[]> {
+export function getGiphyTrending(limit = 50): Promise<Meme[]> {
   return fetchGifs(`trending?api_key=${KEY}&limit=${limit}&rating=${RATING}&bundle=messaging_non_clips`);
 }
 
-export function searchGiphy(query: string, limit = 24): Promise<Meme[]> {
+export function searchGiphy(query: string, limit = 40): Promise<Meme[]> {
   const q = encodeURIComponent(query.trim());
   if (!q) return Promise.resolve([]);
   return fetchGifs(`search?api_key=${KEY}&q=${q}&limit=${limit}&rating=${RATING}&lang=en`);

@@ -1,59 +1,53 @@
 "use client";
 
-import { useMemo } from "react";
-import { memeSvg } from "@/lib/art";
+import Image from "next/image";
 import type { Meme } from "@/lib/types";
-import { isOriginal } from "@/lib/types";
 import { usePrefersReducedMotion } from "@/lib/hooks";
 
 interface Props {
   meme: Meme;
+  /** detail view: use the full asset and let gifs animate */
   live?: boolean;
   className?: string;
   priority?: boolean;
+  sizes?: string;
 }
 
+const GRID_SIZES = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw";
+
 /**
- * Originals render as deterministic SVG. Giphy and imgflip render their real
- * hosted media. `live` turns on SMIL animation for original gifs and swaps a
- * still preview for the animated gif on hosted gifs.
+ * Renders a meme's media inside whatever box the caller sizes via `className`
+ * (usually `aspect-square w-full`). Static images use next/image (resized webp);
+ * gifs use a plain absolutely positioned <img> so the animation is kept and the
+ * aspect box is not stretched by an in-flow image.
  */
-export function MemeArt({ meme, live = false, className = "", priority = false }: Props) {
+export function MemeArt({ meme, live = false, className = "", priority = false, sizes }: Props) {
   const reduced = usePrefersReducedMotion();
-
-  const svg = useMemo(() => {
-    if (!isOriginal(meme)) return null;
-    return memeSvg(meme, { animated: live && meme.type === "gif" && !reduced });
-  }, [meme, live, reduced]);
-
-  if (svg) {
-    return (
-      <div
-        className={`[&>svg]:block [&>svg]:h-full [&>svg]:w-full ${className}`}
-        // svg is generated from local, trusted data only
-        dangerouslySetInnerHTML={{ __html: svg }}
-      />
-    );
-  }
-
   const media = meme.media;
-  if (!media) return <div className={`bg-surface ${className}`} />;
-
-  const showStill = !live && media.still && media.url !== media.still && !reduced;
-  const src = showStill ? media.still! : media.url;
+  // grid thumbnails crop to a clean square, the detail view shows the whole thing
+  const fit = live ? "object-contain" : "object-cover";
 
   return (
     <div className={`relative overflow-hidden bg-bg-2 ${className}`}>
-      {/* eslint-disable-next-line @next/next/no-img-element -- remote gif that must animate, next/image would freeze it */}
-      <img
-        src={src}
-        alt={meme.title}
-        width={media.width}
-        height={media.height}
-        loading={priority ? "eager" : "lazy"}
-        decoding="async"
-        className="h-full w-full object-contain"
-      />
+      {meme.type === "gif" ? (
+        // eslint-disable-next-line @next/next/no-img-element -- animated gif, next/image would freeze it
+        <img
+          src={(!live || reduced) && media.still ? media.still : media.url}
+          alt={meme.title}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          className={`absolute inset-0 h-full w-full ${fit}`}
+        />
+      ) : (
+        <Image
+          src={media.url}
+          alt={meme.title}
+          fill
+          sizes={sizes ?? (live ? "(max-width: 768px) 100vw, 640px" : GRID_SIZES)}
+          priority={priority}
+          className={fit}
+        />
+      )}
     </div>
   );
 }

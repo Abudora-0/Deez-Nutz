@@ -1,6 +1,4 @@
 import { ImageResponse } from "next/og";
-import { isOriginal } from "@/lib/types";
-import { memeSvg } from "@/lib/art";
 import { SITE_HOST } from "@/lib/site";
 import { resolveMeme } from "@/lib/gallery";
 
@@ -35,11 +33,7 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
     );
   }
 
-  const artSrc = isOriginal(meme)
-    ? `data:image/svg+xml;base64,${Buffer.from(
-        memeSvg(meme, { animated: false, mark: true }),
-      ).toString("base64")}`
-    : (meme.media?.still ?? meme.media?.url ?? "");
+  const artSrc = meme.media.still ?? meme.media.url;
 
   return new ImageResponse(
     (

@@ -26,6 +26,11 @@ export const stagger: Variants = {
 };
 
 export const slamIn: Variants = {
-  hidden: { opacity: 0, scale: 1.4 },
-  show: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 260, damping: 18 } },
+  hidden: { opacity: 0, y: "18%", skewX: -6 },
+  show: {
+    opacity: 1,
+    y: 0,
+    skewX: 0,
+    transition: { type: "spring", stiffness: 300, damping: 22 },
+  },
 };

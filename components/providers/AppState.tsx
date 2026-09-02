@@ -82,6 +82,17 @@ interface AppStateValue {
   commandOpen: boolean;
   setCommandOpen: (v: boolean) => void;
 
+  /** shared search query, driven by the hero, the toolbar, or the palette */
+  query: string;
+  setQuery: (v: string) => void;
+  /** bumps when something asks the gallery to jump into view */
+  focusGalleryNonce: number;
+  focusGallery: () => void;
+
+  /** opens the fullscreen slideshow at an index, null closes it */
+  slideshow: number | null;
+  setSlideshow: (i: number | null) => void;
+
   accent: AccentId;
   setAccent: (a: AccentId) => void;
 
@@ -97,8 +108,13 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [chaos, setChaos] = useState(false);
   const [chaosNonce, setChaosNonce] = useState(1);
   const [commandOpen, setCommandOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [focusGalleryNonce, setFocusGalleryNonce] = useState(0);
+  const [slideshow, setSlideshow] = useState<number | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const toastId = useRef(0);
+
+  const focusGallery = useCallback(() => setFocusGalleryNonce((n) => n + 1), []);
 
   const accent = useSyncExternalStore(subscribeAccent, readAccent, () => "acid" as AccentId);
   const setAccent = useCallback((a: AccentId) => writeAccent(a), []);
@@ -137,6 +153,12 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         }),
       commandOpen,
       setCommandOpen,
+      query,
+      setQuery,
+      focusGalleryNonce,
+      focusGallery,
+      slideshow,
+      setSlideshow,
       accent,
       setAccent,
       toasts,
@@ -151,6 +173,10 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       chaos,
       chaosNonce,
       commandOpen,
+      query,
+      focusGalleryNonce,
+      focusGallery,
+      slideshow,
       accent,
       setAccent,
       toasts,
