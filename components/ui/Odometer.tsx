@@ -6,7 +6,6 @@ import { useMounted } from "@/lib/hooks";
 interface Props {
   value: number;
   className?: string;
-  /** minimum digit count, pads with leading zeros */
   minLength?: number;
 }
 
@@ -16,14 +15,15 @@ function Digit({ char }: { char: string }) {
   }
   const d = Number(char);
   return (
-    <span className="relative inline-block h-[1em] w-[0.62em] overflow-hidden align-baseline">
+    <span className="relative inline-block h-[1em] w-[0.6em] overflow-hidden align-bottom leading-none">
       <motion.span
-        className="absolute left-0 top-0 flex flex-col items-center"
+        className="absolute left-0 top-0 flex w-full flex-col items-center leading-none"
+        initial={{ y: `-${d}em` }}
         animate={{ y: `-${d}em` }}
-        transition={{ type: "spring", stiffness: 260, damping: 26 }}
+        transition={{ type: "spring", stiffness: 320, damping: 30 }}
       >
         {Array.from({ length: 10 }).map((_, n) => (
-          <span key={n} className="flex h-[1em] items-center justify-center leading-none">
+          <span key={n} className="flex h-[1em] w-full items-center justify-center leading-none">
             {n}
           </span>
         ))}
@@ -38,15 +38,16 @@ export function Odometer({ value, className = "", minLength = 0 }: Props) {
   const withCommas = digits.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
   if (!mounted) {
-    return (
-      <span className={`font-mono tabular-nums ${className}`}>{withCommas}</span>
-    );
+    return <span className={`font-mono tabular-nums ${className}`}>{withCommas}</span>;
   }
 
   return (
-    <span className={`inline-flex font-mono tabular-nums leading-none ${className}`} aria-label={String(value)}>
+    <span
+      className={`inline-flex font-mono tabular-nums leading-none ${className}`}
+      aria-label={String(value)}
+    >
       {withCommas.split("").map((ch, i) => (
-        <Digit key={`${i}-${withCommas.length}`} char={ch} />
+        <Digit key={`${withCommas.length}-${i}`} char={ch} />
       ))}
     </span>
   );

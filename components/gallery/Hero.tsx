@@ -1,125 +1,109 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { motion } from "motion/react";
-import type { Meme } from "@/lib/types";
-import { MEMES, ORIGINAL_TAGS, seededShuffle, memeOfTheDay } from "@/lib/memes";
-import { MemeArt } from "@/components/meme/MemeArt";
-import { DownloadButton } from "@/components/meme/DownloadButton";
+import { AnimatedLogo } from "@/components/logo/AnimatedLogo";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { Odometer } from "@/components/ui/Odometer";
+import { QuickChips } from "./QuickChips";
 import { useDownloads } from "@/lib/stats";
-import { useMounted } from "@/lib/hooks";
-import { slamIn } from "@/lib/motion";
+import { useAppState } from "@/components/providers/AppState";
 
 const HEAD = ["DOWNLOAD", "DEEZ", "NUTZ"];
 
-export function Hero({ motd: initialMotd }: { motd: Meme }) {
-  const router = useRouter();
+export function Hero() {
   const downloads = useDownloads();
-  const mounted = useMounted();
-  // recompute against the viewer's clock once mounted so "resets at midnight" is honest
-  const motd = mounted ? memeOfTheDay() : initialMotd;
+  const { query, setQuery, focusGallery } = useAppState();
 
-  const randomMeme = () => {
-    const pick = seededShuffle(MEMES, Date.now())[0];
-    router.push(`/meme/${pick.slug}`);
+  const jumpToGallery = () => {
+    document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    focusGallery();
   };
 
   return (
-    <section className="grid gap-8 lg:grid-cols-[1.35fr_1fr] lg:items-center">
-      <div>
-        <motion.h1
-          initial="hidden"
-          animate="show"
-          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
-          className="font-display text-6xl leading-[0.85] tracking-tight sm:text-7xl md:text-8xl"
-        >
+    <section className="grid gap-8 overflow-x-clip lg:grid-cols-[1.4fr_1fr] lg:items-center">
+      <div className="min-w-0">
+        <h1 className="hero-rise break-words font-display leading-[0.82] tracking-tight text-[2.5rem] min-[400px]:text-5xl sm:text-6xl lg:text-7xl xl:text-8xl">
           {HEAD.map((word, i) => (
-            <motion.span
+            <span
               key={word}
-              variants={slamIn}
               className={`block ${i === 1 ? "text-stroke text-bg" : ""} ${i === 2 ? "text-acid" : ""}`}
             >
               {word}
-            </motion.span>
+            </span>
           ))}
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-5 max-w-lg text-lg text-fg-dim"
+        <p className="fade-up-1 mt-5 max-w-lg text-base text-fg-dim sm:text-lg">
+          Every meme template, gif, and fresh reddit post worth posting. Search it,
+          caption it, grab it. No login, no watermarks, no tracking.
+        </p>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            jumpToGallery();
+          }}
+          className="mt-6 flex max-w-lg items-center gap-2 brutal-border brutal-shadow-sm bg-bg px-3 py-3 sm:px-4"
         >
-          A neo brutalist arcade of original meme art. No watermarked reposts, no login walls,
-          no tracking pixels. Just pick one, hit download, and go cause problems.
-        </motion.p>
+          <span className="font-mono text-acid">/</span>
+          <input
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (e.target.value.trim().length >= 2) jumpToGallery();
+            }}
+            placeholder="search templates, gifs, memes..."
+            aria-label="search"
+            className="w-full bg-transparent font-mono text-sm text-fg outline-none placeholder:text-fg-dim sm:text-base"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              aria-label="clear"
+              className="font-mono text-xs text-fg-dim hover:text-fg"
+            >
+              clear
+            </button>
+          )}
+        </form>
+
+        <QuickChips className="mt-3" onPick={jumpToGallery} />
 
         <div className="mt-6 flex flex-wrap gap-3">
           <MagneticButton
-            onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
+            onClick={jumpToGallery}
             className="brutal-border brutal-shadow bg-acid px-5 py-3 font-mono text-sm font-bold uppercase tracking-widest text-bg"
           >
-            Enter the gallery
+            Browse the stash
           </MagneticButton>
-          <MagneticButton
-            onClick={randomMeme}
-            className="brutal-border brutal-shadow bg-surface px-5 py-3 font-mono text-sm font-bold uppercase tracking-widest text-fg"
+          <Link
+            href="/create"
+            className="brutal-border brutal-shadow bg-surface px-5 py-3 font-mono text-sm font-bold uppercase tracking-widest text-fg transition-transform hover:-translate-y-0.5"
           >
-            Random nut ►
-          </MagneticButton>
+            Make one ►
+          </Link>
         </div>
 
-        <dl className="mt-8 flex flex-wrap gap-x-8 gap-y-3 font-mono text-xs font-bold uppercase tracking-widest text-fg-dim">
-          <div>
-            <dt className="sr-only">memes</dt>
-            <dd className="text-2xl text-fg"><Odometer value={MEMES.length} /></dd>
-            <span>certified nuts</span>
-          </div>
-          <div>
-            <dt className="sr-only">tags</dt>
-            <dd className="text-2xl text-fg"><Odometer value={ORIGINAL_TAGS.length} /></dd>
-            <span>categories</span>
-          </div>
+        <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-3 font-mono text-xs font-bold uppercase tracking-widest text-fg-dim">
           <div>
             <dt className="sr-only">downloads</dt>
-            <dd className="text-2xl text-acid"><Odometer value={downloads} /></dd>
+            <dd className="text-2xl text-acid">
+              <Odometer value={downloads} />
+            </dd>
             <span>downloads served</span>
+          </div>
+          <div>
+            <dt className="sr-only">cost</dt>
+            <dd className="text-2xl text-fg">$0</dd>
+            <span>forever, no account</span>
           </div>
         </dl>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, x: 40, rotate: 3 }}
-        animate={{ opacity: 1, x: 0, rotate: 0 }}
-        transition={{ type: "spring", stiffness: 160, damping: 20, delay: 0.2 }}
-        className="relative"
-      >
-        <span className="absolute -left-3 -top-3 z-10 brutal-border bg-hot px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-widest text-bg">
-          nut of the day
-        </span>
-        <div className="brutal-border brutal-shadow bg-surface">
-          <Link
-            href={`/meme/${motd.slug}`}
-            scroll={false}
-            aria-label={`Open ${motd.title}`}
-            className="block border-b-[3px] border-line"
-          >
-            <MemeArt meme={motd} live className="aspect-square w-full" />
-          </Link>
-          <div className="flex items-center justify-between gap-3 p-3">
-            <div>
-              <p className="font-display text-xl leading-none">{motd.title}</p>
-              <p className="font-mono text-[11px] uppercase tracking-widest text-fg-dim">
-                resets at midnight utc
-              </p>
-            </div>
-            <DownloadButton meme={motd} />
-          </div>
-        </div>
-      </motion.div>
+      <div className="fade-up mx-auto hidden aspect-square w-[min(20rem,60vw)] items-center justify-center brutal-border brutal-shadow bg-surface p-8 lg:flex">
+        <AnimatedLogo variant="mark" href={null} className="h-full w-full" />
+      </div>
     </section>
   );
 }

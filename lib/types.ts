@@ -1,49 +1,13 @@
 export type MemeType = "image" | "gif";
 
-export type Template =
-  | "classic"
-  | "starburst"
-  | "stamp"
-  | "drake"
-  | "brain"
-  | "terminal"
-  | "billboard";
-
-export type Palette = "acid" | "hot" | "volt" | "sun" | "grape" | "mono";
-
-export type MascotPose =
-  | "grin"
-  | "shades"
-  | "thumbsup"
-  | "shrug"
-  | "point"
-  | "flames"
-  | "cry"
-  | "dead"
-  | "smug"
-  | "mindblown"
-  | "none";
-
-export interface MemeSpec {
-  template: Template;
-  palette: Palette;
-  mascot: MascotPose;
-  /** one to four short lines of caption text */
-  lines: string[];
-  /** small footnote line, optional */
-  note?: string;
-}
-
 /** where a gallery item comes from */
-export type MemeSource = "original" | "giphy" | "imgflip" | "reddit";
+export type MemeSource = "giphy" | "imgflip" | "reddit";
 
 /** the content category a source belongs to, used for the gallery tabs */
-export type MemeKind = "originals" | "templates" | "gifs" | "fresh";
+export type MemeKind = "templates" | "gifs" | "fresh";
 
 export function memeKind(source: MemeSource): MemeKind {
   switch (source) {
-    case "original":
-      return "originals";
     case "imgflip":
       return "templates";
     case "giphy":
@@ -53,11 +17,11 @@ export function memeKind(source: MemeSource): MemeKind {
   }
 }
 
-/** real hosted media for giphy gifs and imgflip templates */
+/** real hosted media for every gallery item */
 export interface MemeMedia {
-  /** full size url, a gif for giphy, a jpg for imgflip */
+  /** full size url, a gif for giphy, a jpg or png otherwise */
   url: string;
-  /** still preview url for grids, falls back to url */
+  /** smaller still preview url for grids, falls back to url */
   still?: string;
   width: number;
   height: number;
@@ -76,24 +40,19 @@ export interface Meme {
   tags: string[];
   blurb: string;
   source: MemeSource;
-  /** present only when source is "original" */
-  spec?: MemeSpec;
-  /** present only when source is "giphy" or "imgflip" */
-  media?: MemeMedia;
-}
-
-export type OriginalMeme = Meme & { source: "original"; spec: MemeSpec };
-export type HostedMeme = Meme & {
-  source: "giphy" | "imgflip" | "reddit";
   media: MemeMedia;
-};
-
-export function isOriginal(m: Meme): m is OriginalMeme {
-  return m.source === "original" && !!m.spec;
 }
+
+/** kept as an alias so existing call sites keep reading cleanly */
+export type HostedMeme = Meme;
 
 export function isHosted(m: Meme): m is HostedMeme {
-  return m.source !== "original" && !!m.media;
+  return !!m.media;
+}
+
+/** a still image that can be run through the caption studio */
+export function isCaptionable(m: Meme): boolean {
+  return m.type === "image";
 }
 
 export type SortKey = "curated" | "az" | "za" | "spicy" | "fresh";

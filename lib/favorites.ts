@@ -24,7 +24,14 @@ function readFresh(): Meme[] {
   try {
     const parsed = JSON.parse(raw);
     cache = Array.isArray(parsed)
-      ? parsed.filter((x): x is Meme => x && typeof x.id === "string" && typeof x.slug === "string")
+      ? parsed.filter(
+          (x): x is Meme =>
+            x &&
+            typeof x.id === "string" &&
+            typeof x.slug === "string" &&
+            x.media &&
+            typeof x.media.url === "string",
+        )
       : EMPTY;
   } catch {
     cache = EMPTY;

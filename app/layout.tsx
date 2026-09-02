@@ -5,7 +5,6 @@ import "./globals.css";
 import { AppStateProvider } from "@/components/providers/AppState";
 import { SiteHeader } from "@/components/chrome/SiteHeader";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
-import { CustomCursor } from "@/components/chrome/CustomCursor";
 import { ScrollProgress } from "@/components/chrome/ScrollProgress";
 import { Toaster } from "@/components/chrome/Toaster";
 import { KonamiEasterEgg } from "@/components/chrome/KonamiEasterEgg";
@@ -38,13 +37,13 @@ export const metadata: Metadata = {
     template: "%s - Deez Nutz",
   },
   description:
-    "A neo brutalist arcade for downloading the internet's finest memes and gifs. Original art, rendered on the fly, free to grab.",
-  keywords: ["memes", "gifs", "meme gallery", "download memes", "reaction images", "deez nutz"],
+    "Search, caption, and download the internet's memes, gif templates, and fresh reaction images. No login, no watermarks, no tracking.",
+  keywords: ["memes", "gifs", "meme templates", "meme generator", "download memes", "reaction images", "deez nutz"],
   authors: [{ name: "Abudora-0" }],
   openGraph: {
     title: "Deez Nutz - meme and gif arcade",
     description:
-      "A neo brutalist arcade for downloading the internet's finest memes and gifs.",
+      "Search, caption, and download the internet's memes, gifs, and templates. No login.",
     url: SITE,
     siteName: "Deez Nutz",
     type: "website",
@@ -52,7 +51,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Deez Nutz - meme and gif arcade",
-    description: "Download the internet's finest nonsense. Original art, free forever.",
+    description: "Search, caption, and download the internet's finest nonsense. No login.",
   },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
@@ -79,12 +78,11 @@ export default function RootLayout({
       <body className="scanlines flex min-h-full flex-col">
         <AppStateProvider>
           <ScrollProgress />
-          <CustomCursor />
           <KonamiEasterEgg />
           <CommandPalette />
           <Toaster />
           <SiteHeader />
-          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">{children}</main>
+          <main className="mx-auto w-full max-w-7xl flex-1 overflow-x-clip px-4 py-8">{children}</main>
           {modal}
           <SiteFooter />
         </AppStateProvider>

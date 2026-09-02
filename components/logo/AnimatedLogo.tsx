@@ -103,9 +103,12 @@ const WORD = "DEEZ NUTZ";
 export function AnimatedLogo({ variant = "full", className = "", href = "/" }: Props) {
   const reduced = useReducedMotion();
 
+  const markOnly = variant === "mark";
   const inner = (
-    <span className={`group inline-flex items-center gap-2 ${className}`}>
-      <span className="h-[1.6em]">
+    <span
+      className={`group items-center gap-2 ${markOnly ? "flex" : "inline-flex"} ${className}`}
+    >
+      <span className={markOnly ? "flex h-full w-full items-center justify-center" : "h-[1.6em]"}>
         <NutMark reduced={reduced} />
       </span>
 

@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MemeDetail } from "@/components/meme/MemeDetail";
-import { MEMES } from "@/lib/memes";
 import { resolveMeme } from "@/lib/gallery";
+import { getImgflipTemplates } from "@/lib/sources/imgflip";
 
 export const dynamicParams = true;
 export const revalidate = 3600;
 
-export function generateStaticParams() {
-  return MEMES.map((m) => ({ slug: m.slug }));
+export async function generateStaticParams() {
+  const templates = await getImgflipTemplates(100);
+  return templates.map((m) => ({ slug: m.slug }));
 }
 
 export async function generateMetadata({
@@ -44,13 +44,7 @@ export default async function MemePage({
 
   return (
     <article className="py-4">
-      <Link
-        href="/"
-        className="mb-6 inline-block font-mono text-xs font-bold uppercase tracking-widest text-fg-dim hover:text-acid"
-      >
-        ◄ back to the arcade
-      </Link>
-      <MemeDetail meme={meme} variant="page" />
+      <MemeDetail meme={meme} />
     </article>
   );
 }

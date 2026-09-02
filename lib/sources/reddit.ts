@@ -54,14 +54,17 @@ function toMeme(p: ApiPost): Meme | null {
   };
 }
 
-export async function getRedditMemes(count = 24): Promise<Meme[]> {
+export async function getRedditMemes(count = 50): Promise<Meme[]> {
   try {
-    const res = await fetch(`https://meme-api.com/gimme/${SUBREDDITS}/${count}`, {
+    const res = await fetch(`https://meme-api.com/gimme/${SUBREDDITS}/${Math.min(count, 50)}`, {
       next: { revalidate: 3600 },
     });
     if (!res.ok) return [];
     const json = (await res.json()) as { memes?: ApiPost[] };
-    return (json.memes ?? []).map(toMeme).filter((m): m is Meme => m !== null);
+    const seen = new Set<string>();
+    return (json.memes ?? [])
+      .map(toMeme)
+      .filter((m): m is Meme => m !== null && !seen.has(m.id) && (seen.add(m.id), true));
   } catch {
     return [];
   }

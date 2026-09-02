@@ -1,6 +1,4 @@
 import type { Meme } from "./types";
-import { isOriginal } from "./types";
-import { memeSvg } from "./art";
 import { bumpDownloads } from "./stats";
 import { SITE_URL } from "./site";
 
@@ -29,71 +27,18 @@ function triggerUrl(href: string) {
   a.remove();
 }
 
-/* ------------------------------------------------------------- originals */
-
-export function downloadSvg(meme: Meme) {
-  if (!isOriginal(meme)) return downloadMeme(meme);
-  const svg = memeSvg(meme, { animated: meme.type === "gif" });
-  triggerBlob(new Blob([svg], { type: "image/svg+xml" }), `deez-nutz-${meme.slug}.svg`);
+/** the one entry point: streams the media through the download proxy */
+export function downloadMeme(meme: Meme) {
+  triggerUrl(proxyUrl(meme.media.url, `deez-nutz-${meme.slug}`));
   bumpDownloads(1);
-}
-
-export async function svgToPngBlob(svg: string, size = 1200): Promise<Blob> {
-  const img = new Image();
-  img.decoding = "sync";
-  const src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-  await new Promise<void>((resolve, reject) => {
-    img.onload = () => resolve();
-    img.onerror = () => reject(new Error("could not rasterize meme"));
-    img.src = src;
-  });
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("canvas unavailable");
-  ctx.fillStyle = "#12100f";
-  ctx.fillRect(0, 0, size, size);
-  ctx.drawImage(img, 0, 0, size, size);
-  return new Promise<Blob>((resolve, reject) =>
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("encode failed"))), "image/png"),
-  );
-}
-
-/* ------------------------------------------------------------- unified */
-
-/** the one entry point: does the right thing for any meme source */
-export async function downloadMeme(meme: Meme) {
-  if (isOriginal(meme)) {
-    const svg = memeSvg(meme, { animated: false });
-    const blob = await svgToPngBlob(svg);
-    triggerBlob(blob, `deez-nutz-${meme.slug}.png`);
-    bumpDownloads(1);
-    return;
-  }
-  if (meme.media) {
-    triggerUrl(proxyUrl(meme.media.url, `deez-nutz-${meme.slug}`));
-    bumpDownloads(1);
-  }
-}
-
-/** kept for callers that specifically want a png of an original */
-export async function downloadPng(meme: Meme) {
-  return downloadMeme(meme);
 }
 
 export async function copyImageToClipboard(meme: Meme): Promise<boolean> {
   try {
     if (typeof ClipboardItem === "undefined" || !navigator.clipboard?.write) return false;
-    let blob: Blob;
-    if (isOriginal(meme)) {
-      blob = await svgToPngBlob(memeSvg(meme, { animated: false }));
-    } else if (meme.media && meme.type === "image") {
-      const res = await fetch(proxyUrl(meme.media.url, meme.slug));
-      blob = await res.blob();
-    } else {
-      return false; // animated gifs do not copy well
-    }
+    if (meme.type !== "image") return false; // animated gifs do not copy well
+    const res = await fetch(proxyUrl(meme.media.url, meme.slug));
+    const blob = await res.blob();
     await navigator.clipboard.write([new ClipboardItem({ [blob.type || "image/png"]: blob })]);
     return true;
   } catch {
@@ -101,7 +46,27 @@ export async function copyImageToClipboard(meme: Meme): Promise<boolean> {
   }
 }
 
-/* ------------------------------------------------------------- packs */
+export async function copyText(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function shareMeme(meme: Meme): Promise<"shared" | "copied" | "failed"> {
+  const url = `${window.location.origin}/meme/${meme.slug}`;
+  if (typeof navigator.share === "function") {
+    try {
+      await navigator.share({ title: meme.title, url });
+      return "shared";
+    } catch {
+      /* user cancelled or share failed, fall through to copy */
+    }
+  }
+  return (await copyText(url)) ? "copied" : "failed";
+}
 
 export async function downloadPack(
   memes: Meme[],
@@ -114,16 +79,10 @@ export async function downloadPack(
 
   for (const meme of memes) {
     try {
-      if (isOriginal(meme)) {
-        folder?.file(`${meme.slug}.svg`, memeSvg(meme, { animated: meme.type === "gif" }));
-        const png = await svgToPngBlob(memeSvg(meme, { animated: false }));
-        folder?.file(`${meme.slug}.png`, png);
-      } else if (meme.media) {
-        const res = await fetch(proxyUrl(meme.media.url, meme.slug));
-        const buf = await res.arrayBuffer();
-        const ext = meme.type === "gif" ? "gif" : "jpg";
-        folder?.file(`${meme.slug}.${ext}`, buf);
-      }
+      const res = await fetch(proxyUrl(meme.media.url, meme.slug));
+      const buf = await res.arrayBuffer();
+      const ext = meme.type === "gif" ? "gif" : "jpg";
+      folder?.file(`${meme.slug}.${ext}`, buf);
     } catch {
       /* skip the ones that fail, keep going */
     }
@@ -131,9 +90,7 @@ export async function downloadPack(
     onProgress?.(done, memes.length);
   }
 
-  const credits = memes
-    .filter((m) => m.media?.credit)
-    .map((m) => `${m.slug}: ${m.media?.credit} (${m.media?.creditUrl})`);
+  const credits = memes.map((m) => `${m.slug}: ${m.media.credit} (${m.media.creditUrl})`);
 
   folder?.file(
     "README.txt",
@@ -141,8 +98,8 @@ export async function downloadPack(
       "Deez Nutz meme pack",
       SITE_URL,
       "",
-      "Original art is released under the MIT license.",
-      "GIFs are from GIPHY and templates are from imgflip, credited below.",
+      "Every file here is fetched live from a public API and credited below.",
+      "This project does not host or claim ownership of it.",
       "",
       ...credits,
       "",

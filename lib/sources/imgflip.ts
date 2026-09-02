@@ -23,7 +23,7 @@ function toMeme(t: ImgflipTemplate): Meme {
     slug: `template-${slugify(t.name)}-${t.id}`,
     title: t.name,
     type: "image",
-    tags: ["template", "imgflip", "classic"],
+    tags: ["template", "imgflip"],
     blurb: `The blank ${t.name} template. Add your own caption and download it.`,
     source: "imgflip",
     media: {
@@ -38,7 +38,7 @@ function toMeme(t: ImgflipTemplate): Meme {
   };
 }
 
-export async function getImgflipTemplates(limit = 48): Promise<Meme[]> {
+export async function getImgflipTemplates(limit = 100): Promise<Meme[]> {
   try {
     const res = await fetch("https://api.imgflip.com/get_memes", {
       next: { revalidate: 86400 },
@@ -50,6 +50,13 @@ export async function getImgflipTemplates(limit = 48): Promise<Meme[]> {
   } catch {
     return [];
   }
+}
+
+export async function searchImgflipTemplates(query: string, limit = 40): Promise<Meme[]> {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  const all = await getImgflipTemplates(100);
+  return all.filter((m) => m.title.toLowerCase().includes(q)).slice(0, limit);
 }
 
 export async function getImgflipTemplate(slug: string): Promise<Meme | null> {

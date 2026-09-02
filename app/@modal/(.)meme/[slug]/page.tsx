@@ -16,7 +16,7 @@ export default async function InterceptedMemePage({
 
   return (
     <Modal>
-      <MemeDetail meme={meme} variant="modal" />
+      <MemeDetail meme={meme} />
     </Modal>
   );
 }

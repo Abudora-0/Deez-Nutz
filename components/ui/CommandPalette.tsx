@@ -1,16 +1,29 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Command } from "cmdk";
 import { AnimatePresence, motion } from "motion/react";
-import { MEMES } from "@/lib/memes";
 import { useAppState } from "@/components/providers/AppState";
-import { downloadPng } from "@/lib/download";
+
+const GROUP_HEADING =
+  "[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-widest [&_[cmdk-group-heading]]:text-fg-dim";
 
 export function CommandPalette() {
   const router = useRouter();
-  const { commandOpen, setCommandOpen, toggleChaos, setSelectMode, accent, setAccent, pushToast } = useAppState();
+  const {
+    commandOpen,
+    setCommandOpen,
+    toggleChaos,
+    setSelectMode,
+    setSlideshow,
+    accent,
+    setAccent,
+    pushToast,
+    setQuery,
+    focusGallery,
+  } = useAppState();
+  const [text, setText] = useState("");
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -28,9 +41,20 @@ export function CommandPalette() {
     return () => document.removeEventListener("keydown", onKey);
   }, [commandOpen, setCommandOpen]);
 
-  const close = () => setCommandOpen(false);
+  const close = () => {
+    setCommandOpen(false);
+    setText("");
+  };
   const go = (fn: () => void) => {
     fn();
+    close();
+  };
+
+  const runSearch = () => {
+    if (text.trim().length < 2) return;
+    setQuery(text.trim());
+    router.push("/");
+    setTimeout(focusGallery, 60);
     close();
   };
 
@@ -52,12 +76,24 @@ export function CommandPalette() {
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-xl brutal-border bg-bg shadow-[12px_12px_0_0_var(--acid)]"
           >
-            <Command loop label="Deez Nutz command menu" className="[&_[cmdk-list]]:max-h-[52vh] [&_[cmdk-list]]:overflow-y-auto">
+            <Command
+              loop
+              label="Deez Nutz command menu"
+              className="[&_[cmdk-list]]:max-h-[52vh] [&_[cmdk-list]]:overflow-y-auto"
+            >
               <div className="flex items-center gap-2 border-b-[3px] border-line px-3 py-2">
                 <span className="font-mono text-sm text-acid">deez@nuts:~$</span>
                 <Command.Input
                   autoFocus
-                  placeholder="type a command or search memes"
+                  value={text}
+                  onValueChange={setText}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && text.trim().length >= 2) {
+                      e.preventDefault();
+                      runSearch();
+                    }
+                  }}
+                  placeholder="search memes, or type a command"
                   className="w-full bg-transparent py-1 font-mono text-sm text-fg outline-none placeholder:text-fg-dim"
                 />
               </div>
@@ -66,10 +102,23 @@ export function CommandPalette() {
                   nothing. bold.
                 </Command.Empty>
 
-                <Command.Group heading="Actions" className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-widest [&_[cmdk-group-heading]]:text-fg-dim">
+                {text.trim().length >= 2 && (
+                  <Command.Group heading="Search" className={GROUP_HEADING}>
+                    <Item value={`search ${text}`} onSelect={runSearch}>
+                      Search for &quot;{text.trim()}&quot;
+                    </Item>
+                  </Command.Group>
+                )}
+
+                <Command.Group heading="Go" className={GROUP_HEADING}>
                   <Item onSelect={() => go(() => router.push("/"))}>Open the gallery</Item>
+                  <Item onSelect={() => go(() => router.push("/create"))}>Make a meme</Item>
                   <Item onSelect={() => go(() => router.push("/favorites"))}>Open favorites</Item>
                   <Item onSelect={() => go(() => router.push("/about"))}>What is Deez Nutz</Item>
+                </Command.Group>
+
+                <Command.Group heading="Actions" className={GROUP_HEADING}>
+                  <Item onSelect={() => go(() => setSlideshow(0))}>Start the slideshow</Item>
                   <Item onSelect={() => go(toggleChaos)}>Toggle chaos mode</Item>
                   <Item onSelect={() => go(() => setSelectMode(true))}>Start a download pack</Item>
                   <Item
@@ -84,35 +133,10 @@ export function CommandPalette() {
                   </Item>
                 </Command.Group>
 
-                <Command.Group heading="Accent" className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-widest [&_[cmdk-group-heading]]:text-fg-dim">
+                <Command.Group heading="Accent" className={GROUP_HEADING}>
                   {(["acid", "hot", "volt", "sun", "grape"] as const).map((a) => (
                     <Item key={a} onSelect={() => go(() => setAccent(a))}>
                       Set accent: {a} {accent === a ? "✦" : ""}
-                    </Item>
-                  ))}
-                </Command.Group>
-
-                <Command.Group heading="Memes" className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-widest [&_[cmdk-group-heading]]:text-fg-dim">
-                  {MEMES.map((m) => (
-                    <Item
-                      key={m.id}
-                      value={`${m.title} ${m.tags.join(" ")}`}
-                      onSelect={() => go(() => router.push(`/meme/${m.slug}`))}
-                    >
-                      {m.title}
-                      <span className="ml-auto text-fg-dim">{m.type}</span>
-                    </Item>
-                  ))}
-                </Command.Group>
-
-                <Command.Group heading="Quick grab" className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-widest [&_[cmdk-group-heading]]:text-fg-dim">
-                  {MEMES.slice(0, 6).map((m) => (
-                    <Item
-                      key={`dl-${m.id}`}
-                      value={`download ${m.title}`}
-                      onSelect={() => go(() => downloadPng(m).then(() => pushToast(`snagged ${m.slug}`)))}
-                    >
-                      Download {m.title}
                     </Item>
                   ))}
                 </Command.Group>

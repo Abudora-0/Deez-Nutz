@@ -1,58 +1,55 @@
 "use client";
 
-import { useMemo } from "react";
-import { memeSvg } from "@/lib/art";
+import Image from "next/image";
 import type { Meme } from "@/lib/types";
-import { isOriginal } from "@/lib/types";
 import { usePrefersReducedMotion } from "@/lib/hooks";
 
 interface Props {
   meme: Meme;
+  /** detail view: use the full asset and let gifs animate */
   live?: boolean;
   className?: string;
   priority?: boolean;
+  sizes?: string;
 }
 
+const GRID_SIZES = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw";
+
 /**
- * Originals render as deterministic SVG. Giphy and imgflip render their real
- * hosted media. `live` turns on SMIL animation for original gifs and swaps a
- * still preview for the animated gif on hosted gifs.
+ * Static images go through next/image (resized webp). Gifs render as a plain
+ * <img> because next/image would freeze the animation. On the grid we show the
+ * smaller `still` url; the detail view (`live`) shows the full asset.
  */
-export function MemeArt({ meme, live = false, className = "", priority = false }: Props) {
+export function MemeArt({ meme, live = false, className = "", priority = false, sizes }: Props) {
   const reduced = usePrefersReducedMotion();
+  const media = meme.media;
 
-  const svg = useMemo(() => {
-    if (!isOriginal(meme)) return null;
-    return memeSvg(meme, { animated: live && meme.type === "gif" && !reduced });
-  }, [meme, live, reduced]);
-
-  if (svg) {
+  if (meme.type === "gif") {
+    // grids and reduced-motion get the still poster; the detail view animates
+    const showStill = (!live || reduced) && !!media.still;
     return (
-      <div
-        className={`[&>svg]:block [&>svg]:h-full [&>svg]:w-full ${className}`}
-        // svg is generated from local, trusted data only
-        dangerouslySetInnerHTML={{ __html: svg }}
-      />
+      <div className={`relative overflow-hidden bg-bg-2 ${className}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- animated gif, next/image would freeze it */}
+        <img
+          src={showStill ? media.still! : media.url}
+          alt={meme.title}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          className="h-full w-full object-contain"
+        />
+      </div>
     );
   }
 
-  const media = meme.media;
-  if (!media) return <div className={`bg-surface ${className}`} />;
-
-  const showStill = !live && media.still && media.url !== media.still && !reduced;
-  const src = showStill ? media.still! : media.url;
-
   return (
     <div className={`relative overflow-hidden bg-bg-2 ${className}`}>
-      {/* eslint-disable-next-line @next/next/no-img-element -- remote gif that must animate, next/image would freeze it */}
-      <img
-        src={src}
+      <Image
+        src={media.url}
         alt={meme.title}
-        width={media.width}
-        height={media.height}
-        loading={priority ? "eager" : "lazy"}
-        decoding="async"
-        className="h-full w-full object-contain"
+        fill
+        sizes={sizes ?? (live ? "(max-width: 768px) 100vw, 640px" : GRID_SIZES)}
+        priority={priority}
+        className="object-contain"
       />
     </div>
   );
