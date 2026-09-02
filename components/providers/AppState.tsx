@@ -31,10 +31,24 @@ function readAccent(): AccentId {
   return saved && ACCENTS.some((a) => a.id === saved) ? saved : "acid";
 }
 
+/* the themed cursors are svg data uris with the accent color baked in,
+   so they cannot use var(); rebuild them whenever the accent changes */
+function cursorArrow(hex: string) {
+  const c = hex.replace("#", "%23");
+  return `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M3 2 L3 20 L8 15 L11.5 22 L15 20.5 L11.5 13.5 L19 13.5 Z' fill='${c}' stroke='%2312100f' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 3 2`;
+}
+
+function cursorTarget(hex: string) {
+  const c = hex.replace("#", "%23");
+  return `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M13 2v6M13 18v6M2 13h6M18 13h6' stroke='%2312100f' stroke-width='6'/%3E%3Ccircle cx='13' cy='13' r='7' stroke='%2312100f' stroke-width='6'/%3E%3Cpath d='M13 2v6M13 18v6M2 13h6M18 13h6' stroke='${c}' stroke-width='3'/%3E%3Ccircle cx='13' cy='13' r='7' stroke='${c}' stroke-width='3'/%3E%3C/g%3E%3C/svg%3E") 13 13`;
+}
+
 function applyAccent(id: AccentId) {
   const entry = ACCENTS.find((a) => a.id === id) ?? ACCENTS[0];
   const root = document.documentElement;
   root.style.setProperty("--acid", entry.hex);
+  root.style.setProperty("--cursor-arrow", cursorArrow(entry.hex));
+  root.style.setProperty("--cursor-target", cursorTarget(entry.hex));
   root.dataset.accent = entry.id;
 }
 
