@@ -49,9 +49,9 @@ tab you are on. Every network source fails soft, so the page always renders.
 
 | Gallery | Live search | Caption studio |
 | --- | --- | --- |
-| ![gallery](docs/shot-gallery.png) | ![search](docs/shot-search.png) | ![caption](docs/shot-caption.png) |
+| ![gallery](docs/shot-gallery.webp) | ![search](docs/shot-search.webp) | ![caption](docs/shot-caption.webp) |
 
-<p align="center"><img src="docs/shot-mobile.png" alt="mobile" width="300"></p>
+<p align="center"><img src="docs/shot-mobile.webp" alt="mobile" width="300"></p>
 
 ## Features
 
